@@ -10,7 +10,7 @@ class Borrow extends Model
     /* The attributes that are mass assignable */
     protected $fileable = [
         'book_id',
-        'user_id',
+        'borrower_id',
         'borrowed_at',
         'returned_at',
     ];
@@ -22,7 +22,7 @@ class Borrow extends Model
     }
 
     /* Define the relationship with the user model */
-    public function user()
+    public function borrower()
     {
         return $this->belongsTo(user::class);
     }
