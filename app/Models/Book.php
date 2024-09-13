@@ -7,24 +7,30 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
-class book extends Model 
+class Book extends Model 
 {
     use HasFactory;
-    protected $quarded = [];
+
+    protected $fileable = [
+        'title',
+        'auther_id',
+        'category_id',
+        'published_at',
+    ];
 
     public function auther():Belongsto
     {
-        return $this->belongsTo(auther::class,'auther_id','id');
+        return $this->belongsTo(Author::class,'auther_id','id');
     }
 
     public function category():BelongTo
     {
-        return $this->belongsTo(category::class);
+        return $this->belongsTo(Category::class);
     }
     
     public function publisher():BelongsTo
     {
-        return $this->belongsTo(publisher::class);
+        return $this->belongsTo(Borrow::class);
     }
 }
 
