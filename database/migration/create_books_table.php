@@ -12,11 +12,10 @@ class CreateBooksTable extends Migration
     {
         Schema::create('books', function (Blueprint $table){
             $table->id();
-            $table->string('name');
+            $table->string('title');
             $table->foreignId('author_id')->constrained()->onDelete('cascade');
             $table->foreignId('category_id')->constrained()->onDelete('cascade');
-            $table->foreignId('publisher_id')->nullable()->constrained()->onDelete('cascade');
-            $table->string('status')->default('Y');
+            $table->date('publisher_at');
             $table->timestamps();
         });
     }
