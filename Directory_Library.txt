@@ -12,8 +12,8 @@ app/
             AuthorController.php
             BookController.php
             CategoryControlller.php
+            BorrowerController.php
             BorrowController.php
-            UserController.php
 
     Models/ 
         Author.php 
