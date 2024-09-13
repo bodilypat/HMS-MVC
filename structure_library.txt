@@ -2,32 +2,32 @@ database/
     migration/ 
         creatte_authors_table.php
         create_books_table.php 
-        crate_categories_table.php 
+        crate_category_table.php 
+        create_borrowers_table.php 
         create_borrows_table.php 
-        create_users_table.php 
 
 app/
     Http/
         controllers/
-            AutherController.php
+            AuthorController.php
             BookController.php
             CategoryControlller.php
             BorrowController.php
             UserController.php
 
     Models/ 
-        Auther.php 
+        Author.php 
         Book.php 
         Category.php 
-        Borrow.php 
-        User.php 
+        Borrower.php 
+        borrow.php 
 
 resource/
     views/ 
         layouts/ 
             app.php 
 
-        Authers/ 
+        Authors/ 
             index.blade.php 
             create.blade.php 
             edit.blade.php 
@@ -39,7 +39,7 @@ resource/
             edit.blade.php 
             report.blade.php  
 
-        categories/ 
+        category/ 
             index.blade.php 
             create.blade.php 
             edit.blade.php 
@@ -51,7 +51,7 @@ resource/
             edit.blade.php 
             report.blade.php 
 
-        users/ 
+        borrowers/ 
             index.blade.php 
             create.blade.php 
             edit.blade.php 
