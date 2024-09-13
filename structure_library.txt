@@ -1,0 +1,57 @@
+database/ 
+    migration/ 
+        creatte_authors_table.php
+        create_books_table.php 
+        crate_categories_table.php 
+        create_borrows_table.php 
+        create_users_table.php 
+app/
+    Http/
+        controllers/
+            AutherController.php
+            BookController.php
+            CategoryControlller.php
+            BorrowController.php
+            UserController.php
+    Models/ 
+        Auther.php 
+        Book.php 
+        Category.php 
+        Borrow.php 
+        User.php 
+resource/
+    views/ 
+        Authers/ 
+            index.blade.php 
+            create.blade.php 
+            edit.blade.php 
+            report.blade.php 
+        books/ 
+            index.blade.php 
+            create.blade.php
+            edit.blade.php 
+            report.blade.php  
+        categories/ 
+            index.blade.php 
+            create.blade.php 
+            edit.blade.php 
+            report.blade.php 
+        Borrows/ 
+            index.blade.php 
+            create.blade.php 
+            edit.blade.php 
+            report.blade.php 
+        users/ 
+            index.blade.php 
+            create.blade.php 
+            edit.blade.php 
+            report.blade.php 
+        layouts/ 
+            app.php 
+            
+route/ 
+    web.php 
+
+        
+
+
