@@ -12,4 +12,10 @@ class category extends Model
         'name',
         'description',
     ];
+
+    /* Define the relationship with the Book model */
+    public function books()
+    {
+        return $this->hasMany(Boo::Class);
+    }
 }
