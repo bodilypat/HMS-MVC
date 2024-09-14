@@ -45,7 +45,7 @@ resource/
             edit.blade.php 
             report.blade.php 
 
-        Borrows/ 
+        borrows/ 
             index.blade.php 
             create.blade.php 
             edit.blade.php 
@@ -55,7 +55,7 @@ resource/
             index.blade.php 
             create.blade.php 
             edit.blade.php 
-            report.blade.php 
-            
+            report.blade.php
+    
 route/ 
     web.php 
