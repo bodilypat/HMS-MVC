@@ -2,12 +2,12 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factory\HasFactory;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
-class Book extends Model 
+class Book extends Model
 {
     use HasFactory;
 
@@ -18,19 +18,20 @@ class Book extends Model
         'published_at',
     ];
 
-    public function auther():Belongsto
+    /* relationship model */
+    public function auther():BelongsTo
     {
         return $this->belongsTo(Author::class,'auther_id','id');
     }
 
-    public function category():BelongTo
+    public function category():BelongsTo
     {
-        return $this->belongsTo(Category::class);
+        return $this->BelongsTo('Category::Class');
     }
-    
+
     public function publisher():BelongsTo
     {
-        return $this->belongsTo(Borrow::class);
+        return $this->BelongsTo('Borrow::Class')
     }
-}
 
+}
