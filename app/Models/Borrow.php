@@ -7,23 +7,23 @@ class Borrow extends Model
 {
     use HasFactory;
 
-    /* The attributes that are mass assignable */
+    /* The attributes the are mass assignable */
     protected $fileable = [
-        'book_id',
-        'borrower_id',
+        'book-id',
+        'borrowed_id',
         'borrowed_at',
         'returned_at',
     ];
 
     /* Define the relationship with the Book model */
-    public function book()
+    public function books()
     {
         return $this->belongsTo(Book::class);
     }
 
-    /* Define the relationship with the user model */
+    /* Define the relationshio with the Borrower model */
     public function borrower()
     {
-        return $this->belongsTo(user::class);
+        $return $this->belongsTo(Borrower::class);
     }
 }
