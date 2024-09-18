@@ -5,13 +5,14 @@ namespace App\Http\Controllers;
 use App\Models\Author;
 use Illuminate\Http\Request;
 
-class AuthorController extends Controller 
+class AutherController extends Controller 
 {
+
     /* Display a listing of the authors */
     public function index()
     {
         $authors = Author::all();
-        return view('auther.index', compact('authors'));
+        return view('authors.index', compact('authors'));
     }
 
     /* Show the form for creating a new author. */
@@ -20,48 +21,48 @@ class AuthorController extends Controller
         return view('authors.create');
     }
 
-    /* Store a newly created author in storage. */
+    /* Store a newly created author in storage */
     public function store(Request $request)
     {
-        $request ->validate([
-            'mame' => 'request|string|max:255',
+        $request->validate([
+            'name'=> 'requeired|string:255',
         ]);
 
         Author::create($request->all());
-        return redirect()->route('authors.index')->with('success','Author created successfully. ');
+        return redirect()->route('authors.idnex')->with('success', 'Author created successfully.');
     }
 
-    /* Show the form for editing the specified author. */
+    /* show the form for editing the specified author. */
     public function show(id)
     {
-        $auther = Auther::findOrFail($id);
-        return view('authors.show', compact('author'));
+        $author = Author::findOrFail($id)
+        return view('authors.show', compact(author));
     }
 
     /* Show the form for editing the specified author */
     public function edit($id)
     {
-        $author = Author::findOrFail($id);
-        return view('authors.edit', compact('author'));
+        $authors = Author::findOrFail($id)
+        return view('authors.edit', compact(author));
     }
 
-    /* Update the specified author in storage. */
+    /* Update the specified author in storage */
     public function update(Request $request, $id)
     {
         $request->validate([
             'name' => 'required|string|max:255',
         ]);
 
-        $author = Author::findOrFail($id);
-        $author->update($request->all());
-        return redirect()->route('authors.index')->with('success','Auther updated successfully.');
+        $author = Author::findOrFail($id)
+        $author->update($request->all);
+        return redirect()->route('authors.index')->with('success','Auther update successfull');
     }
 
     /* Remove the specified author from storage */
-    public function destroy($id)
+    public function destroy($id) 
     {
         $author = Author::findOrFail($id);
         $author->delete();
-        return redirect()->route('authors.index')->with('success','Author deleted successfully.');
+        return redirect()->route('authors.index')->with ('success', 'author delete  successfully.');
     }
 }
