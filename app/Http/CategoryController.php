@@ -1,57 +1,60 @@
 <?php
-    
+
 namespace App\Http\Controllers;
 
 use App\Models\Category;
-use App\Http\Requests\StorecategoryRequest;
-use App\Http\Requests\UpdatecategoryRequest;
+use Illuminate\Http\Request;
 
-class CategoryController extendss Controllers{
-
-    /* Display a listing of the resource.*/
-    public functiion inde()
+class CategoryController extends Controller
+{
+    public function index()
     {
-        return view('category.index', [
-            'categories' => category::Paginate(5)
-        ]);
+        $categories = Category::All();
+        return view('categories.index', compact('categories'));
     }
 
-    /*  Show the form for creating a new reource.*/
     public function create()
     {
-        return view('category.create');
+        return view('categories.create');
     }
 
-    /* Store a newly created resource in storage.*/
-    public function store(storecategoryRequest $request)
+    public function store(Request $request)
     {
-        category::create($request->validated());
-        return redirect()->route('categories');
-    }
-
-    /*  Show the form for editing the specified resource.*/
-    public function edit(category $category)
-    {
-        return view('category.edit', [
-            'category' => $category
+        $request->validate([
+            'name' => 'required|unique|categories|max:255',
         ]);
+
+        Category::create($request->all());
+        return redirect()->route('categories.index')->with('success','Category Created successfully.');
     }
 
-    /*   Update the specified resource in storage. */
-    public function update(UpdatecategoryRequest $request, $id)
+    public function show($id)
     {
-        $category = $category::find($id);
-        $category->name = $request->name();
-        $category->save();
-
-        return redirect()->route('categories');
+        $categories = Category::findOrFail($id);
+        return view('categories.show', compact('categories'));
     }
-    
-    /* Remove the specified resource from storage.*/
-    public function destroy($id)
+
+    public function edit($id)
     {
-        category::find($id)->delete();
-        return redirect()->('categories');
+        $categories = Category::findOrFail($id);
+        return view('categories.edit', compact(categories));
+    }
+
+    /* Update the specified categories in storage */
+    public function update(Request $request , $id)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255|unique:categories,name', . $categories->id,
+        ]);
+
+        $category->update($request->all());
+        return redirect()->route('categories.index')->with('success','Category updated successfully');
+    }
+
+    public function destroy(Category $category)
+    {
+        $categories = Author::findOrFail($id);
+        $categories->delete();
+        return redirect()->route('categories.index')->with('success','Category deleted successfully.');
     }
 }
-
