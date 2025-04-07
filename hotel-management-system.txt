@@ -1,0 +1,64 @@
+inventory-management-system
+ 
+	hotel-management-system/
+	├── backend/                   			# Backend API (PHP files)
+	│   ├── api/                   			# API endpoints for CRUD operations
+	│   │   ├── guests.php        			# Endpoint for handling guests-related requests
+	│   │   ├── rooms.php   				# Endpoint for handling rooms-related requests
+	│   │   ├── reservations.php       		# Endpoint for handling reservations-related requests	
+	│   │   ├── payments.php      			# Endpoint for handling payments-related requests
+	│   │   ├── staffs.php         	    	# Endpoint for handling staffs-related requests
+	│   │   ├── housekeepings.php  	        # Endpoint for handling hoursekeepings-related requests
+	│   │   ├── room_services.php     		# Endpoint for handling room_services-related requests
+	│   │   ├── billings.php               	# Endpoint for handling billing-related requests
+	│   │   ├── feedbacks.php               # Endpoint for handling feedback-related requests
+		|   |
+	│   │   ├── dbconnect.php           	# Database connection
+	│   │   └── ...                     	# Other API files for various operations
+	│   ├── config/                     	# Configuration files (e.g., database connection settings)
+	│   │   └── config.php              	# Configuration file (e.g., database settings)
+	│   └── .htaccess                   	# If you're using Apache server (optional)
+	├── frontend/                       	# Frontend (HTML, JavaScript, CSS files)
+	│   ├── dashboard.html              	# Main HTML file with form and table
+	│   ├── css/                        	# CSS styles
+	│   │   └── style.css               	# Styles for the frontend
+	│   ├── js/                         	# JavaScript files
+	│   │   ├── script.js               	# Main JavaScript file for handling API requests (AJAX)
+	│   │   ├── login.js               		# Helper functions (optional)
+	│   │   └── ajax-requests.js        	# Separate file for AJAX requests (optional)
+	├── assets/                        		# Public assets (images, fonts, etc.)
+	│   └── logo.png                    	# Example logo
+	├── .gitignore                      	# Git ignore file (optional)
+	└── README.md                       	# Project readme (optional)
+
+	services-management-system/
+	├── backend/                   			# Backend API (PHP files)
+	│   ├── api/                   			# API endpoints for CRUD operations
+	│   │   ├── guests.php        	    	# Endpoint for handling guests-related requests
+	│   │   ├── rooms.php   				# Endpoint for handling rooms-related requests
+	│   │   ├── reservations.php       		# Endpoint for handling reservations-related requests	
+	│   │   ├── payments.php      			# Endpoint for handling payments-related requests
+	│   │   ├── staffs.php          		# Endpoint for handling staffs-related requests
+	│   │   ├── housekeepings.php     		# Endpoint for handling housekeeopings-related requests
+	│   │   ├── room_services.php     		# Endpoint for handling billings-related requests
+	│   │   ├── billings.php               	# Endpoint for handling billings-related requests
+	│   │   ├── feedbacks.php               # Endpoint for handling feedback-related requests
+		|   |
+	│   │   ├── dbconnect.php           	# Database connection
+	│   │   └── ...                     	# Other API files for various operations
+	│   ├── config/                     	# Configuration files (e.g., database connection settings)
+	│   │   └── config.php              	# Configuration file (e.g., database settings)
+	│   └── .htaccess                   	# If you're using Apache server (optional)
+	├── frontend/                       	# Frontend (HTML, JavaScript, CSS files)
+	│   ├── dashboard.html              	# Main HTML file with form and table
+	│   ├── css/                       		# CSS styles
+	│   │   └── style.css               	# Styles for the frontend
+	│   ├── js/                         	# JavaScript files
+	│   │   ├── main.js               	# Main JavaScript file for handling API requests (AJAX)
+	│   │   ├── login.js               		# Helper functions (optional)
+	│   │   └── ajax-requests.js        	# Separate file for AJAX requests (optional)
+	├── assets/                         	# Public assets (images, fonts, etc.)
+	│   └── logo.png                    	# Example logo
+	├── .gitignore                      	# Git ignore file (optional)
+	└── README.md                       	# Project readme (optional)
+	
