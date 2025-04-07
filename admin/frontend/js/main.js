@@ -272,4 +272,138 @@ document.getElementById('update-room-form').addEventListener('submit', function 
     updateRoom();
 });
 
+// URL of your API
+const apiUrl = 'http://localhost/services/api/room_services.php';
+
+// Function to get all room service records
+function getRoomServices() {
+    fetch(apiUrl)
+        .then(response => response.json())
+        .then(data => {
+            if (data.message) {
+                alert(data.message);  // Handle case where no records are found
+            } else {
+                displayRoomServices(data);  // Function to display data
+            }
+        })
+        .catch(error => console.error('Error fetching room services:', error));
+}
+
+// Function to get a single room service record by ID
+function getRoomServiceById(id) {
+    fetch(`${apiUrl}?id=${id}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.message) {
+                alert(data.message);  // Handle case where record is not found
+            } else {
+                displayRoomService(data);  // Function to display a single record
+            }
+        })
+        .catch(error => console.error('Error fetching room service:', error));
+}
+
+// Function to create a new room service record
+function createRoomService() {
+    const serviceData = {
+        reservation_id: document.getElementById('reservation_id').value,
+        service_type: document.getElementById('service_type').value,
+        service_request_time: document.getElementById('service_request_time').value,
+        service_status: document.getElementById('service_status').value,
+    };
+
+    fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(serviceData),
+    })
+    .then(response => response.json())
+    .then(data => {
+        alert(data.message);  // Show success or failure message
+        if (data.room_service_id) {
+            console.log('Room Service ID:', data.room_service_id);  // Log the created record ID
+        }
+    })
+    .catch(error => console.error('Error creating room service:', error));
+}
+
+// Function to update an existing room service record
+function updateRoomService(id) {
+    const serviceData = {
+        reservation_id: document.getElementById('reservation_id').value,
+        service_type: document.getElementById('service_type').value,
+        service_request_time: document.getElementById('service_request_time').value,
+        service_status: document.getElementById('service_status').value,
+    };
+
+    fetch(`${apiUrl}?id=${id}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(serviceData),
+    })
+    .then(response => response.json())
+    .then(data => {
+        alert(data.message);  // Show success or failure message
+    })
+    .catch(error => console.error('Error updating room service:', error));
+}
+
+// Function to delete a room service record
+function deleteRoomService(id) {
+    if (confirm('Are you sure you want to delete this room service record?')) {
+        fetch(`${apiUrl}?id=${id}`, {
+            method: 'DELETE',
+        })
+        .then(response => response.json())
+        .then(data => {
+            alert(data.message);  // Show success or failure message
+        })
+        .catch(error => console.error('Error deleting room service:', error));
+    }
+}
+
+// Function to display all room services
+function displayRoomServices(services) {
+    const tableBody = document.getElementById('room_services_table_body');
+    tableBody.innerHTML = ''; // Clear existing data
+
+    services.forEach(service => {
+        const row = document.createElement('tr');
+        
+        row.innerHTML = `
+            <td>${service.room_service_id}</td>
+            <td>${service.reservation_id}</td>
+            <td>${service.service_type}</td>
+            <td>${service.service_request_time}</td>
+            <td>${service.service_status}</td>
+            <td>
+                <button onclick="getRoomServiceById(${service.room_service_id})">View</button>
+                <button onclick="updateRoomService(${service.room_service_id})">Edit</button>
+                <button onclick="deleteRoomService(${service.room_service_id})">Delete</button>
+            </td>
+        `;
+
+        tableBody.appendChild(row);
+    });
+}
+
+// Function to display a single room service
+function displayRoomService(service) {
+    document.getElementById('reservation_id').value = service.reservation_id;
+    document.getElementById('service_type').value = service.service_type;
+    document.getElementById('service_request_time').value = service.service_request_time;
+    document.getElementById('service_status').value = service.service_status;
+}
+
+// Event listeners for adding, updating, and deleting room services
+document.getElementById('create_room_service_btn').addEventListener('click', createRoomService);
+
+// Fetch all room services when the page loads
+window.onload = function() {
+    getRoomServices();
+};
 
