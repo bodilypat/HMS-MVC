@@ -1,4 +1,4 @@
-inventory-management-system
+hotel-management-system
  
 	hotel-management-system/
 	├── backend/                   			# Backend API (PHP files)
