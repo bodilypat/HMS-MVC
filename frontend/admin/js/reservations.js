@@ -1,4 +1,4 @@
-/* Base URL to your API (adjust to your actual endpoint like "api/reservations.php" */
+/* Base URL to  API  */
 const apiUrl = 'api/reservations.php';
 
 /* Fetch all reservations  */
