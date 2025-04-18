@@ -14,6 +14,21 @@ CREATE TABLE guests (
     CONSTRAINT chk_dates CHECK (check_in_date <= check_out_date)  -- Ensure check-out date is after check-in date
 );
 
+CREATE bookings (
+    booking_id INT AUTO_INCREMENT PRIMARY KEY,
+    guest_id INT NOT NULL,
+    room_id INT NOT NULL,
+    check_in DATE NOT NULL,
+    checkk_out DATE NOT NULL,
+    number_of_guests INT NOT NULL,
+    booking_status ENUM('Pending','Confirmed','Checked-in','Checked-Out','Cancelled') DEFAULT 'Pending',
+    payment_status ENUM('Pending','Paid') DEFAULT 'Pending',
+    booking_source ENUM('Website','Phone','Walk-in','Travel Agency','OTA') DEFAULT 'Website',
+    special_request TEXT,
+    create_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    FOREIGN KEY (guest_id) REFERENCES guests(guest_id) ON DELETE CASCADE,
+    FOREIGN KEY (room_id) REFERENCES rooms(room_id) ON DELETE CASCADE,
+);
 
 CREATE TABLE rooms (
     room_id INT AUTO_INCREMENT PRIMARY KEY,                    
