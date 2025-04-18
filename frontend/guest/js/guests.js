@@ -107,3 +107,7 @@ function fetchGuest() {
 		};
 		updateGuest(guestId, updatedGuest);
 	}
+	
+			
+		
+			
