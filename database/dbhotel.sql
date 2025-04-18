@@ -1,3 +1,15 @@
+CREATE TABLE users (
+    user_id INT AUTO_INCREMENT PRIMARY KEY,
+    full_name VARCHAR(100) NOT NULL,
+    usernae VARCHAR(50) NOT NULL UNIQUE,
+    email VARCHAR(100) NOT NULL UNIQUE,
+    password_hash VARCHAR(255) NOT NULL,
+    role ENUM('Admin','Manager','Receptionist','Staff','Guest') NOT NULL DEFAULT 'Guest',
+    phone_number VARCHAR(20),
+    status ENUM('Active','Inactive') DEFAULT 'Active',
+    ceate_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
 CREATE TABLE guests (
     guest_id INT AUTO_INCREMENT PRIMARY KEY,          -- Unique ID for each guest
     first_name VARCHAR(100) NOT NULL,                 -- Corrected spelling of 'first_name'
