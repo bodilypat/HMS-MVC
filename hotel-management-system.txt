@@ -18,7 +18,7 @@ hotel-management-system/
 │   │   │   ├── feedbacks.php             # Feedback management
 │   │   │   ├── housekeepings.php         # Housekeeping management
 │   │   │   └── staff.php                 # Staff CRUD operations
-│   │   ├── guest/                         # Guest-specific routes
+│   │   ├── guest/                        # Guest-specific routes
 │   │   │   ├── guests.php                # CRUD operations for guest details
 │   │   │   ├── room_services.php         # Room services request management
 │   │   │   └── payments.php              # Payment and invoice management
