@@ -2,15 +2,20 @@ Fullstack-Hotel-Management-System/
 ├── backend/                              # Backend API & business logic (PHP)
 │   │     
 │   ├── config/                           # Configuration files
-│   │   ├── config.php                    # DB config, constants
-│   │   └── dbconnectp                    # PDO connection handler
+│   │   ├── config.php                    # App constants, environment variables
+│   │   └── dbconnect.php                    # PDO DB connection handler
 │   │     
-│   ├── auth/                             
-│   │   ├── loginphp                      # Handle login
-│   │   ├── logout.php                    # Handle logout
-│   │   └── session.php                   # Session check middleware
+│   ├── core/ 
+│   │   ├── Helper.php  
+│   │   ├── Validator.php  
+│   │   └── SessionMiddleware.php         # Renamed from session.php
+│   │     
+│   ├── auth/                             # Authentication Handler
+│   │   ├── login.php                     # Staff/Admin Login handler
+│   │   ├── logout.php                    # Session destroy Logic
+│   │   └── AuthController.php            # Optional: centralize auth logic
 │   │   
-│   ├── controllers/                      
+│   ├── controllers/                      # API controller
 │   │   ├── UserController.php            
 │   │   ├── GuestController.php
 │   │   ├── BookingController.php
@@ -22,7 +27,7 @@ Fullstack-Hotel-Management-System/
 │   │   ├── BillingController.php
 │   │   └── FeedbackController.php
 │   │
-│   ├── models/
+│   ├── models/                           # Business models(ORM style)
 │   │   ├── User.php            
 │   │   ├── Guest.php
 │   │   ├── Booking.php
@@ -33,21 +38,18 @@ Fullstack-Hotel-Management-System/
 │   │   ├── RoomService.php
 │   │   ├── Billing.php
 │   │   └── Feedback.php
-│   ├── routes/    
-│   │   ├── api.php                       # All API endpoints
-│   │   └── web.php                       # Optional web-based routes
+│   │   
+│   ├── routes/                           # Route definitions
+│   │   ├── api.php                       # API/ endpoint definitions
+│   │   └── web.php                       # Optional backend-rendered pages
 │   │
-│   ├── views/    
+│   ├── views/                            # Option Rendered Views
 │   │   ├── emails/  
 │   │   └── templates/                    # Optional admin teamplates
 │   │
 │   ├── uploads/    
 │   │   └── receipts/                     # Uploaded payment receipts 
 │   │
-│   ├── utils/    
-│   │   ├── validator.php                 # Input validation
-│   │   └── Helpers.php                   # Common utility functions  
-│   │                         
 │   └── index.php                         # Optional admin templates
 │
 ├── frontend/                             
@@ -90,4 +92,4 @@ Fullstack-Hotel-Management-System/
 │       ├── footer.html
 │   	└── vendors/                      # Third-party libraries (Bootstap, jQuery, etc)
 │
-
+└── README.md
