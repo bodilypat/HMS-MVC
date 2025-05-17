@@ -31,7 +31,7 @@ CREATE bookings (
     guest_id INT NOT NULL,
     room_id INT NOT NULL,
     check_in DATE NOT NULL,
-    checkk_out DATE NOT NULL,
+    check_out DATE NOT NULL,
     number_of_guests INT NOT NULL,
     booking_status ENUM('Pending','Confirmed','Checked-in','Checked-Out','Cancelled') DEFAULT 'Pending',
     payment_status ENUM('Pending','Paid') DEFAULT 'Pending',
