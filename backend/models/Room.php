@@ -7,7 +7,7 @@
 			$this->pdo = $pdo;
 		}
 		
-		/* Gett all rooms */
+		/* Get all rooms */
 		public function getAll(): array {
 			try {
 				$stmt = $this->pdo->query("SELECT * FROM rooms");
@@ -47,12 +47,12 @@
 				return $stmt->execute([
 					$data['room_number'],
 					$data['room_type'],
-					$data['floor_number'],
+					$data['floor_number'] ?? null,
 					$data['price_per_night'],
 					$data['room_status'],
-					$data['room_description'],
+					$data['room_description'] ?? null,
 					$data['beds_count'] ?? null,
-					$data['capaity']
+					$data['capaity'] ?? null
 				]);
 			} catch (PDOException $e) {
 				error_log("Room::create - " . $e->getMessage());
@@ -62,7 +62,7 @@
 		
 		/* Update room  */
 		public function update(array $data): bool {
-			if (empty($data['room_id'])) {
+			if (empty($data['room_id']) || isValidUpdateData($data)) {
 				return false;
 			}
 			
@@ -76,12 +76,12 @@
 				return $stmt->execute([
 					$data['room_number'],
 					$data['room_type'],
-					$data['floor_number'],
+					$data['floor_number'] ?? null,
 					$data['price_per_night'],
 					$data['room_status'],
 					$data['room_description'] ?? null,
-					$data['beds_count'],
-					$data['capacity'],
+					$data['beds_count'] ?? null,
+					$data['capacity'] ?? null,
 					$data['room_id']
 				]);
 			} catch (PDOException $e) {
@@ -96,7 +96,7 @@
 				$stmt = $this->pdo->prepare("DELETE FROM rooms WHERE room_id = ? ");
 				return $stmt->execute([$roomId]);
 			} catch (PDOException $e) {
-				error_log("Room: - " . $e->getMessage());
+				error_log("Room:: Delete - " . $e->getMessage());
 				return false;
 			}
 		}
@@ -104,11 +104,19 @@
 		/* Validate required fields for room creation */
 		private function isValidateCreateData(array $data): bool {
 			return isset(
-				$data['room_id'],
 				$data['room_number'],
 				$data['room_type'],
 				$data['price_per_night'],
 				$data['room_status'],
+			);
+		}
+		/* Validat required field for room update */
+		private function isValidUpdateData(array $data): bool {
+			return isset(
+				$data['room_number'],
+				$data['room_type'],
+				$data['price_per_night'],
+				$data['room_status']
 			);
 		}
 	}
