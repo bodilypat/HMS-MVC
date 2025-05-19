@@ -7,7 +7,7 @@
 			$this->pdo = $pdo;
 		}
 		
-		/* Get all reservation */
+		/* Get all reservations */
 		public function getAll(): array {
 			try {
 				$stmt = $this->pdo->query("SELECT * FROM reservations");
@@ -96,27 +96,26 @@
 				return false;
 			}
 		}
-		
-		/* Validate daa for creating or update a reservation */
-		private function inValidCreateData(array $data): bool {
-			if {
-				empty($data['guest_id']) || 
-				empty($data['room_id']) ||
-				empty($data['check_id']) ||
-				empty($data['check_out']) ||
-				empty($data['reservation_status']) ||
-				empty($data['payment_status']) 
-				) {
-					return false;
-				}
-				
-				/* Optional: Check date validity */
-				$checkIn = strtotime($data['check_in']);
-				$checkOut = strtotime($data['check_out']);
-				
-				if ($checkIn === false || $checkOut === false || $checkIn > $checkOut) {
-					return false;
-				}
-				
-				/*  */
+		/* Validate data for create/update */
+		private function isValidReservationData(array $data): bool {
+			$requiredFieldss = [
+			'guest_id','room_id','check_in','check_out',
+			'reservation_status','payment_status'
+			];
+			
+			foreach ($requiredFields as $field) {
+			if (empty($data[$field])) {
+				return false;
+			}
+		}
+		$checkId = strtotime($data['check_in']);
+		$checkOut = strtotime($data['check_out']);
+					
+		if ($checkIn === false || $checkOut === false || $checkIn > $checkOut) {
+			return false;
+		}
+			return true;
+		}
+	}
+			
 				
