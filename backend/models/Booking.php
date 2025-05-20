@@ -1,4 +1,5 @@
 <?php
+
 	class Booking {
 		private PDO __construct(PDO $pdo)
 		{
@@ -52,6 +53,7 @@
 					$data['number_of_guests'],
 					$data['booking_status'] ?? 'Pending',
 					$data['payment_status'] ?? 'Pending',
+					$data['boooking_source'] ?? 'Website',
 					$data['special_request'] ?? null
 				]);
 			} catch (PDOException $e) {
@@ -62,7 +64,7 @@
 		
 		/* Update existing booking */
 		public function update(array $data): bool {
-			if (empty($data['booking_id'])) {
+			if (empty($data['booking_id']) || !$this-.isValidCreateData()) {
 				return false;
 			}
 			
@@ -82,7 +84,7 @@
 					$data['booking_status'] ?? 'Pending',
 					$data['payment_status'] ?? 'Pending',
 					$data['booking_source'] ?? 'Website',
-					$data['special_request'] null,
+					$data['special_request'] ?? null,
 					$data['booking_id']
 				]);
 			} catch (PDOException $e) {
@@ -97,7 +99,7 @@
 				$stmt = $this->pdo->prepare("DELETE FROM bookings WHERE booking_id");
 				return $stmt->excute([$bookingId]);
 			} catch (PDOException $e) {
-				error_log("booking::delete - " .$e->getMessage());
+				error_log("booking::delete - " . $e->getMessage());
 				return false;
 			}
 		}
