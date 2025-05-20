@@ -47,11 +47,11 @@
 					) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
 				");
 				return $stmt->execute([
-					$data['first_anme'],
+					$data['first_name'],
 					$data['last_name'],
 					$data['role'],
 					$data['email'],
-					$data['phone_number'],
+					$data['phone_number'] null,
 					$data['salary'],
 					$data['hire_date'],
 					$data['status']
@@ -106,27 +106,34 @@
 		/* Validate staff data */
 		private function isValidStaffData(array Data): bool {
 			$requiredFields= ['first_name','last_name','role','email','salary','hire_date','status'];
+			
+			/* Check if all required fields are present */
 			foreach ($requiredFields as $field) {
 				if (empty($data[$field])) {
 					return false;
 				}
 			}
 		
+			/* Validate email format */
 			if (!filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
 				return false;
 			}
-		
+			
+			/* Validate role */
 			if (!in_array($data['role'], ['Receptionist','Housekeeper','Manager','Other'], true)) {
 				return false;
 			}
-		
+		    
+			/* Validate salary is numeric and non-negative */
 			if (!is_numeric($data['salary']) || $data['salary'] < 0) {
 				return false;
 			}
 		
+			/* Validate hire_date format */
 			if (!strtotime($data['hire_date'])) {
 				return false;
 			}
 			return true;
 		}
 	}
+?>
