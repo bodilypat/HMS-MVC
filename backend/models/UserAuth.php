@@ -58,6 +58,7 @@
 		}
 		
 		/* Check if username or email is already taken */
+		public function userExists(string $username, string $email): bool {
 			try {
 				$stmt = $this->pdo->prepare("
 					SELECT COUNT(*) FROM users WHERE username = ? OR email = ?
@@ -88,7 +89,7 @@
 				$stmt = $this->pdo->prepare("UPDATE users SET status = 'Inactive' WHERE user_id = ? ");
 				return $stmt->execute([$userId]);
 		} catch (PDOException $e) {
-			error_log("UserAuth::deactive - " . $e->getMessage());
+			error_log("UserAuth::deactivate - " . $e->getMessage());
 			return false;
 		}
 	}
