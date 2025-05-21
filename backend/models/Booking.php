@@ -21,7 +21,7 @@
 		public function getById(int $booking_id): ? array 
 		{
 			try {
-				$stmt = $this->pdo->prepare("SELECT * FROM bookings WHERE booking_id =? ");
+				$stmt = $this->pdo->prepare("SELECT * FROM bookings WHERE booking_id = ? ");
 				$stmt->execute([$bookingId]);
 				$result = $stmt->fetch(PDO::FETCH_ASSOC);
 				return $result ?: null;
@@ -64,7 +64,7 @@
 		
 		/* Update existing booking */
 		public function update(array $data): bool {
-			if (empty($data['booking_id']) || !$this-.isValidCreateData()) {
+			if (empty($data['booking_id']) || !$this->isValidCreateData()) {
 				return false;
 			}
 			
