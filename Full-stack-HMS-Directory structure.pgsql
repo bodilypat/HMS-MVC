@@ -20,8 +20,19 @@ Fullstack-Hotel-Management-System/
 │   │   ├── controllers/
 │   │   │   ├── GuestController.php
 │   │   ├── models/
-│   │   │   ├── Guest.php                    
-│   │   └── AuthController.php            
+│   │   │   ├── Guest.php      
+│   │   ├── routes/                       # Route definitions
+│   │   │   └── api.php   
+│   │   ├── core/
+│   │   │   ├── Database.php              # PDO connection class
+│   │   │   ├── Router.php                # Optional basic routing
+│   │   │   ├── Response.php              # Helper for JSON repsonses
+│   │   │   └── Auth.php                  # Authentication helper
+│   │   ├── config/
+│   │   │   ├── config.php
+│   │   │   └── dbconnect.php             # DB connection settings
+│   │   └── middleware/                   # Optional: Middleware for auth, logging
+│   │       └── AuthMiddleware.php                 
 │   │   
 │   ├── controllers/                      # Business logic controllers (API layer)
 │   │   ├── AuthController.php   
