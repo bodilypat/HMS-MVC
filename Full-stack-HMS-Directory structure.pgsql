@@ -1,6 +1,8 @@
 Fullstack-Hotel-Management-System/
 ├── backend/                              # Backend API & business logic (PHP)
-│   │     
+│   │  
+│   ├── public/  
+│   │   └── index.php              
 │   ├── config/                           # Configuration files
 │   │   ├── config.php                    
 │   │   └── dbconnect.php                 # PDO DB connection handler
@@ -10,9 +12,11 @@ Fullstack-Hotel-Management-System/
 │   │   ├── Validator.php  
 │   │   └── SessionMiddleware.php         
 │   │     
-│   ├── auth/                             # Authentication Logic
-│   │   ├── login.php                    
-│   │   ├── logout.php                  
+│   ├── app/                             # Authentication Logic
+│   │   ├── auth/ 
+│   │   |   ├── checkin.svg                
+│   │   ├── login.php
+│   │   ├── logout.php                     
 │   │   └── AuthController.php            
 │   │   
 │   ├── controllers/                      # Business logic controllers (API layer)
