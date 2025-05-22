@@ -14,7 +14,7 @@ Fullstack-Hotel-Management-System/
 │   │     
 │   ├── app/                             # Authentication Logic
 │   │   ├── auth/ 
-│   │   |   ├── checkin.svg                
+│   │   │   ├── checkin.svg                
 │   │   ├── login.php
 │   │   ├── logout.php                     
 │   │   └── AuthController.php            
