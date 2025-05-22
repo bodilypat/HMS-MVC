@@ -12,7 +12,7 @@
 		public function getAll(): array {
 			try {
 				$stmt = $this->pdo->query("SELECT * FROM guests");
-				return $stmt->fetAll(PDO::FETCH_ASSOC);
+				return $stmt->fetchAll(PDO::FETCH_ASSOC);
 			} catch (PDOException $e) {
 				error_log("Guest::getAll - " . $e->getMessage());
 				return [];
@@ -53,7 +53,7 @@
 					$data['id_type'],
 					$data['id_number'],
 					$data['dob'],
-					$data['nationality'],
+					$data['nationality'] ?? null,
 					$data['check_in_date'] ?? null,
 					$data['check_out_date'] ?? null
 				]);
