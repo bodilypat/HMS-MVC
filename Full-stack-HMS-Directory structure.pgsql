@@ -14,9 +14,13 @@ Fullstack-Hotel-Management-System/
 │   │     
 │   ├── app/                             # Authentication Logic
 │   │   ├── auth/ 
-│   │   │   ├── checkin.svg                
-│   │   ├── login.php
-│   │   ├── logout.php                     
+│   │   │   ├── login.php      
+│   │   │   ├── register.php       
+│   │   │   └── resetPassword.php      
+│   │   ├── controllers/
+│   │   │   ├── GuestController.php
+│   │   ├── models/
+│   │   │   ├── Guest.php                    
 │   │   └── AuthController.php            
 │   │   
 │   ├── controllers/                      # Business logic controllers (API layer)
