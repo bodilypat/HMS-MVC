@@ -20,12 +20,6 @@
 			
 			public function show(int $id): void 
 			{
-				$reservation = $this->reservationModel->getAll();
-				$this->respond($reservations);
-			}
-			
-			public function show(int $id): void 
-			{
 				$reservation = $this->reservationModel->getById($id) ;
 				if ($reservation) {
 					$this->respond($reservation);
@@ -45,7 +39,7 @@
 			
 			public function update(array $data): void 
 			{
-				if (!isset($data['reservation_id'])) {
+				if (isset($data['reservation_id']) && $this->reservationModel->update($data)) {
 					$this->respond(['message' => 'Reservation updated successfully']);
 				} else {
 					$this->respond(['error' => 'Failed to update reservation'], 400);
