@@ -23,12 +23,14 @@ Fullstack-Hotel-Management-System(no framework) /
 │   │   │   ├── RoomController.php
 │   │   │   ├── ReservationController.php
 │   │   │   ├── PaymentController.php
+│   │   │   ├── StaffController.php
 │   │   ├── models/
 │   │   │   ├── Guest.php     
 │   │   │   ├── Booking.php
 │   │   │   ├── Room.php 
 │   │   │   ├── Reservation.php
 │   │   │   ├── Payment.php
+│   │   │   ├── Staff.php
 │   │   ├── routes/                       # Route definitions
 │   │   │   └── api.php   
 │   │   ├── core/
