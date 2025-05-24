@@ -1,4 +1,4 @@
-Fullstack-Hotel-Management-System/
+Fullstack-Hotel-Management-System(no framework) /
 ├── backend/                              # Backend API & business logic (PHP)
 │   │  
 │   ├── public/  
@@ -19,8 +19,16 @@ Fullstack-Hotel-Management-System/
 │   │   │   └── resetPassword.php      
 │   │   ├── controllers/
 │   │   │   ├── GuestController.php
+│   │   │   ├── BookingController.php
+│   │   │   ├── RoomController.php
+│   │   │   ├── ReservationController.php
+│   │   │   ├── PaymentController.php
 │   │   ├── models/
-│   │   │   ├── Guest.php      
+│   │   │   ├── Guest.php     
+│   │   │   ├── Booking.php
+│   │   │   ├── Room.php 
+│   │   │   ├── Reservation.php
+│   │   │   ├── Payment.php
 │   │   ├── routes/                       # Route definitions
 │   │   │   └── api.php   
 │   │   ├── core/
