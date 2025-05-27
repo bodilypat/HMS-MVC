@@ -19,18 +19,28 @@ Fullstack-Hotel-Management-System(no framework) /
 │   │   │   └── resetPassword.php      
 │   │   ├── controllers/
 │   │   │   ├── GuestController.php
-│   │   │   ├── BookingController.php
+│   │   │   ├── RoomTypegController.php
 │   │   │   ├── RoomController.php
 │   │   │   ├── ReservationController.php
 │   │   │   ├── PaymentController.php
+│   │   │   ├── BillingController.php
+│   │   │   ├── ServiceController.php
+│   │   │   ├── RoomServiceController.php
 │   │   │   ├── StaffController.php
+│   │   │   ├── HousekeepingController.php
+│   │   │   └── FeedbackController.php 
 │   │   ├── models/
 │   │   │   ├── Guest.php     
-│   │   │   ├── Booking.php
+│   │   │   ├── RoomType.php
 │   │   │   ├── Room.php 
 │   │   │   ├── Reservation.php
 │   │   │   ├── Payment.php
+│   │   │   ├── Billing.php
+│   │   │   ├── Service.php
+│   │   │   ├── RoomService.php
 │   │   │   ├── Staff.php
+│   │   │   ├── Housekeeping.php
+│   │   │   └── Feedback.php 
 │   │   ├── routes/                       # Route definitions
 │   │   │   └── api.php   
 │   │   ├── core/
