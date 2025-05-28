@@ -16,11 +16,7 @@ Fullstack-Hotel-Management-System(no framework) /
 │   │   ├── Database.php                  # PDO connection manager 
 │   │   └── Logger.php         
 │   │     
-│   ├── app/                             # Authentication Logic
-│   │   ├── auth/ 
-│   │   │   ├── login.php      
-│   │   │   ├── register.php       
-│   │   │   └── resetPassword.php      
+│   ├── app/                             # Authentication Logic 
 │   │   ├── controllers/
 │   │   │   ├── GuestController.php
 │   │   │   ├── RoomTypegController.php
@@ -45,26 +41,34 @@ Fullstack-Hotel-Management-System(no framework) /
 │   │   │   ├── Staff.php
 │   │   │   ├── Housekeeping.php
 │   │   │   └── Feedback.php 
-│   │   ├── routes/                       # Route definitions
+│   │   ├── services/                       
 │   │   │   ├── api.php
 │   │   │   └── web.php   
-│   │   ├── storages/
-│   │   │   ├── logs/
-│   │   │   │   └── dbconnect.php    
-│   │   │   └── dbconnect.php             # DB connection settings
-│   │   └── tests/                   # Optional: Middleware for auth, logging
-│   │       └── AuthMiddleware.php                 
+│   │   ├── middleware/                       
+│   │   │   ├── AuthMiddleware.php
+│   │   │   └── SessionMiddleware.php 
+│   │   ├── validators/                       
+│   │   │   └── Validator.php     
+│   │   ├── helpers/
+│   │   │   └── helper.php             
+│   │   └── auth/   
+│   │       ├── Login.php   
+│   │       ├── register.php                   
+│   │       └── resetPassword.php                 
 │   │   
 │   ├── routes/                           # Route definitions
 │   │   ├── api.php                       # API routing
 │   │   └── web.php                       # Optional backend-rendered view 
 │   │
-│   ├── views/                            # Server-rendered views (Optional)
-│   │   ├── emails/  
-│   │   └── templates/                    # Admin UI templates, if any
+│   ├── storages/                            
+│   │   ├── logs/ 
+│   │   │   └── resetPassword.php     
+│   │   └── uploads/    
+│   │       └── resetPassword.php                    
 │   │
-│   ├── uploads/    
-│   │   └── receipts/                     # Server-side file storage
+│   ├── tests/  
+│   │   ├── RoomTest.php  
+│   │   └── GuestTest.php                     # Server-side file storage
 │   │
 │   └── index.php                         # API entry point (if using routing manually)
 │
