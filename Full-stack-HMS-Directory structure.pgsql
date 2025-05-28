@@ -1,16 +1,20 @@
 Fullstack-Hotel-Management-System(no framework) /
 ├── backend/                              # Backend API & business logic (PHP)
 │   │  
-│   ├── public/  
-│   │   └── index.php              
-│   ├── config/                           # Configuration files
-│   │   ├── config.php                    
-│   │   └── dbconnect.php                 # PDO DB connection handler
+│   ├── public/                           # Public web root (entry point)
+│   │   └── index.php                     # Front controller (handles all request)
+│   ├── config/                           
+│   │   ├── config.php                    # App-wide settings (timezone, debug, etc)
+│   │   ├── dbConnect.php                 # Database configuration
+│   │   └── .env                          # Environment variables 
 │   │     
 │   ├── core/                             # Core utilities and middleware
-│   │   ├── Helper.php  
-│   │   ├── Validator.php  
-│   │   └── SessionMiddleware.php         
+│   │   ├── Router.php                    # Lightweight router
+│   │   ├── Request.php                   # Input abstraction
+│   │   ├── Response.php                  # JSON response builder
+│   │   ├── Auth.php                      # Auth utitlity class
+│   │   ├── Database.php                  # PDO connection manager 
+│   │   └── Logger.php         
 │   │     
 │   ├── app/                             # Authentication Logic
 │   │   ├── auth/ 
@@ -42,16 +46,13 @@ Fullstack-Hotel-Management-System(no framework) /
 │   │   │   ├── Housekeeping.php
 │   │   │   └── Feedback.php 
 │   │   ├── routes/                       # Route definitions
-│   │   │   └── api.php   
-│   │   ├── core/
-│   │   │   ├── Database.php              # PDO connection class
-│   │   │   ├── Router.php                # Optional basic routing
-│   │   │   ├── Response.php              # Helper for JSON repsonses
-│   │   │   └── Auth.php                  # Authentication helper
-│   │   ├── config/
-│   │   │   ├── config.php
+│   │   │   ├── api.php
+│   │   │   └── web.php   
+│   │   ├── storages/
+│   │   │   ├── logs/
+│   │   │   │   └── dbconnect.php    
 │   │   │   └── dbconnect.php             # DB connection settings
-│   │   └── middleware/                   # Optional: Middleware for auth, logging
+│   │   └── tests/                   # Optional: Middleware for auth, logging
 │   │       └── AuthMiddleware.php                 
 │   │   
 │   ├── routes/                           # Route definitions
