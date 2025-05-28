@@ -54,31 +54,6 @@ Fullstack-Hotel-Management-System(no framework) /
 │   │   └── middleware/                   # Optional: Middleware for auth, logging
 │   │       └── AuthMiddleware.php                 
 │   │   
-│   ├── controllers/                      # Business logic controllers (API layer)
-│   │   ├── AuthController.php   
-│   │   ├── UserController.php       
-│   │   ├── GuestController.php
-│   │   ├── BookingController.php
-│   │   ├── RoomController.php
-│   │   ├── ReservationController.php
-│   │   ├── PaymentController.php
-│   │   ├── StaffController.php
-│   │   ├── RoomServiceController.php
-│   │   ├── BillingController.php
-│   │   └── FeedbackController.php
-│   │
-│   ├── models/                           # Business models(ORM style)
-│   │   ├── User.php            
-│   │   ├── Guest.php
-│   │   ├── Booking.php
-│   │   ├── Room.php
-│   │   ├── Reservation.php
-│   │   ├── Payment.php
-│   │   ├── Staff.php
-│   │   ├── RoomService.php
-│   │   ├── Billing.php
-│   │   └── Feedback.php
-│   │   
 │   ├── routes/                           # Route definitions
 │   │   ├── api.php                       # API routing
 │   │   └── web.php                       # Optional backend-rendered view 
