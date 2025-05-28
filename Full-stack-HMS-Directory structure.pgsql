@@ -1,25 +1,26 @@
 Fullstack-Hotel-Management-System(no framework) /
-├── backend/                              # Backend API & business logic (PHP)
+├── backend/                                    # PHP backend
 │   │  
-│   ├── public/                           # Public web root (entry point)
-│   │   └── index.php                     # Front controller (handles all request)
-│   ├── config/                           
-│   │   ├── config.php                    # App-wide settings (timezone, debug, etc)
-│   │   ├── dbConnect.php                 # Database configuration
-│   │   └── .env                          # Environment variables 
+│   ├── public/                                 # Web-accessible entry point
+│   │   └── index.php                           # Front controller 
+│   │ 
+│   ├── config/                                 # App configuration
+│   │   ├── config.php                          # Global config
+│   │   ├── dbConnect.php                       # DB config
+│   │   └── .env                                # Environment variables 
 │   │     
-│   ├── core/                             # Core utilities and middleware
-│   │   ├── Router.php                    # Lightweight router
-│   │   ├── Request.php                   # Input abstraction
-│   │   ├── Response.php                  # JSON response builder
-│   │   ├── Auth.php                      # Auth utitlity class
-│   │   ├── Database.php                  # PDO connection manager 
+│   ├── core/                                   # Core libraries/utilities 
+│   │   ├── Router.php                    
+│   │   ├── Request.php                   
+│   │   ├── Response.php                  
+│   │   ├── Auth.php                      
+│   │   ├── Database.php                 
 │   │   └── Logger.php         
 │   │     
-│   ├── app/                             
-│   │   ├── controllers/
+│   ├── app/                                    # Application Logic 
+│   │   ├── controllers/                        # Controllers for each Domain
 │   │   │   ├── GuestController.php
-│   │   │   ├── RoomTypegController.php
+│   │   │   ├── RoomTypeController.php
 │   │   │   ├── RoomController.php
 │   │   │   ├── ReservationController.php
 │   │   │   ├── PaymentController.php
@@ -29,7 +30,8 @@ Fullstack-Hotel-Management-System(no framework) /
 │   │   │   ├── StaffController.php
 │   │   │   ├── HousekeepingController.php
 │   │   │   └── FeedbackController.php 
-│   │   ├── models/
+│   │   │ 
+│   │   ├── models/                             # Data Models
 │   │   │   ├── Guest.php     
 │   │   │   ├── RoomType.php
 │   │   │   ├── Room.php 
@@ -41,17 +43,23 @@ Fullstack-Hotel-Management-System(no framework) /
 │   │   │   ├── Staff.php
 │   │   │   ├── Housekeeping.php
 │   │   │   └── Feedback.php 
-│   │   ├── services/                       
-│   │   │   ├── api.php
-│   │   │   └── web.php   
-│   │   ├── middleware/                       
+│   │   │   
+│   │   ├── services/                           #Business logic
+│   │   │   ├── ReservationService.php
+│   │   │   ├── BillingService.php
+│   │   │   └── NotificationService.php   
+│   │   │ 
+│   │   ├── middleware/                         # Middleware for request filtering
 │   │   │   ├── AuthMiddleware.php
 │   │   │   └── SessionMiddleware.php 
-│   │   ├── validators/                       
-│   │   │   └── Validator.php     
-│   │   ├── helpers/
-│   │   │   └── helper.php             
-│   │   └── auth/   
+│   │   │ 
+│   │   ├── validators/                         # Validation logic
+│   │   │   └── Validator.php  
+│   │   │    
+│   │   ├── helpers/                            # Helper utilities
+│   │   │   └── helper.php    
+│   │   │          
+│   │   └── auth/                               # Auth-specific scripts
 │   │       ├── Login.php   
 │   │       ├── register.php                   
 │   │       └── resetPassword.php                 
@@ -62,59 +70,65 @@ Fullstack-Hotel-Management-System(no framework) /
 │   │
 │   ├── storages/                            
 │   │   ├── logs/ 
-│   │   │   └── resetPassword.php     
+│   │   │   └── error.log     
 │   │   └── uploads/    
-│   │       └── resetPassword.php                    
+│   │       └── receipts/                    
 │   │
 │   ├── tests/  
-│   │   ├── RoomTest.php  
-│   │   └── GuestTest.php                 # Server-side file storage
+│   │   ├── RoomTest.php                  # Unit or integration tests
+│   │   └── GuestTest.php                 
 │   │
-│   └── index.php                         # API entry point (if using routing manually)
+│   └── index.php                         # Alternative entry point (CLI/API testing)
 │
-├── frontend/                            
-│   ├── public/                           
+├── frontend/                             # Client-side static UI
+│   ├── public/                           # Public HTML entry (for hosting)
 │   │   └── index.html  
-│   ├── pages/   
+│   │
+│   ├── pages/                            # Page Templates
 │   │   ├── index.html  
 │   │   ├── booking.html
 │   │   ├── room-detail.html 
 │   │   ├── feedback.html 
 │   │   ├── login.html 
 │   │   └── dashboard.html 
-│   ├── components/
+│   │
+│   ├── components/                       # HTML fragments
 │   │   ├── header.html
 │   │   ├── footer.html
-│   │   └── room-card.html                         
-│   ├── styles/  
+│   │   └── room-card.html 
+│   │                        
+│   ├── styles/                           # CSS
 │   │   ├── main.css
 │   │   ├── booking.css 
 │   │   ├── dashboard.css   
 │   │   ├── responsive.css  
 │   │   └── thems/ 
-│   │       └── default.css             
-│   ├── scripts/
+│   │       └── default.css   
+│   │          
+│   ├── scripts/                          # JavaScript
 │   │   ├── main.js 
 │   │   ├── booking.js 
 │   │   ├── feedback.js 
 │   │   ├── auth.js  
 │   │   ├── dashboard.js      
 │   │   └── utils/  
-│   │       ├── api.js  
-│   │       └── dom.js                                
-│   ├── assets/ 
+│   │       ├── api.js                    # API fetch wrappers
+│   │       └── dom.js                    # DOM helper functions    
+│   │         
+│   ├── assets/                           # Static assets
 │   │   ├── images/
 │   │   │   ├── logo.png
 │   │   │   ├── rooms/
 │   │   │   └── icons/ 
 │   │   │       ├── checkin.svg  
 │   │   │       └── service.svg  
+│   │   │ 
 │   │   └── vendors/  
 │   │       └── flatpicker/                                   
 │   │    
-│   └── uploads/                          
+│   └── uploads/                         # Local upload (e.g. preview)
 │       └── temp/  
-├── .env                                   
+├── .env                                 # Global (shared) envioronment file 
 ├── .gitignore
 │
-└── README.md
+└── README.md                            # Project documentation
