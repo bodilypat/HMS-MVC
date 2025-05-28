@@ -16,7 +16,7 @@ Fullstack-Hotel-Management-System(no framework) /
 │   │   ├── Database.php                  # PDO connection manager 
 │   │   └── Logger.php         
 │   │     
-│   ├── app/                             # Authentication Logic 
+│   ├── app/                             
 │   │   ├── controllers/
 │   │   │   ├── GuestController.php
 │   │   │   ├── RoomTypegController.php
@@ -68,7 +68,7 @@ Fullstack-Hotel-Management-System(no framework) /
 │   │
 │   ├── tests/  
 │   │   ├── RoomTest.php  
-│   │   └── GuestTest.php                     # Server-side file storage
+│   │   └── GuestTest.php                 # Server-side file storage
 │   │
 │   └── index.php                         # API entry point (if using routing manually)
 │
@@ -113,7 +113,7 @@ Fullstack-Hotel-Management-System(no framework) /
 │   │       └── flatpicker/                                   
 │   │    
 │   └── uploads/                          
-│       └── uploads/  
+│       └── temp/  
 ├── .env                                   
 ├── .gitignore
 │
