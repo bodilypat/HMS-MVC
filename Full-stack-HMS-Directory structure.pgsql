@@ -72,40 +72,49 @@ Fullstack-Hotel-Management-System(no framework) /
 │   │
 │   └── index.php                         # API entry point (if using routing manually)
 │
-├── frontend/                             # Client-side application
+├── frontend/                            
+│   ├── public/                           
+│   │   └── index.html  
 │   ├── pages/   
 │   │   ├── index.html  
 │   │   ├── booking.html
-│   │   ├── roomd.html 
+│   │   ├── room-detail.html 
 │   │   ├── feedback.html 
 │   │   ├── login.html 
-│   │   └── dashboard.html                       
-│   ├── css/  
-│   │   ├── main.css
-│   │   ├── booking.css 
-│   │   ├── dashboard.css   
-│   │   └── responsive.css                 
-│   ├── js/
-│   │   ├── main.js 
-│   │   ├── booking.js 
-│   │   ├── feedback.js 
-│   │   ├── auth.js    
-│   │   └── dashboard.js                  
+│   │   └── dashboard.html 
 │   ├── components/
 │   │   ├── header.html
 │   │   ├── footer.html
-│   │   └── room-card.html                    
-│   ├── images/ 
-│   │   ├── logo.png
-│   │   ├── rooms/
-│   │   └── icons/ 
-│   │       ├── checkin.svg  
-│   │       └── service.svg                     
+│   │   └── room-card.html                         
+│   ├── styles/  
+│   │   ├── main.css
+│   │   ├── booking.css 
+│   │   ├── dashboard.css   
+│   │   ├── responsive.css  
+│   │   └── thems/ 
+│   │       └── default.css             
+│   ├── scripts/
+│   │   ├── main.js 
+│   │   ├── booking.js 
+│   │   ├── feedback.js 
+│   │   ├── auth.js  
+│   │   ├── dashboard.js      
+│   │   └── utils/  
+│   │       ├── api.js  
+│   │       └── dom.js                                
 │   ├── assets/ 
-│   │   └── vendors/                  
+│   │   ├── images/
+│   │   │   ├── logo.png
+│   │   │   ├── rooms/
+│   │   │   └── icons/ 
+│   │   │       ├── checkin.svg  
+│   │   │       └── service.svg  
+│   │   └── vendors/  
+│   │       └── flatpicker/                                   
 │   │    
-│   └── uploads/                           # Client-side uploads (optionsal)
-├── .env                                   # Environment variables
+│   └── uploads/                          
+│       └── uploads/  
+├── .env                                   
 ├── .gitignore
 │
 └── README.md
