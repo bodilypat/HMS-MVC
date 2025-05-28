@@ -1,5 +1,6 @@
 <?php 
 	require_once __DIR__ .'/../models/Reservation.php';
+	require_once __DIR__ .'/../core/Database.php';
 	
 	class ReservationController
 	{
@@ -12,12 +13,14 @@
 				$this->reservationModel = new Reservation($pdo);
 			}
 			
+			/* GET /reservations */
 			public function index(): void
 			{
 				$reservations = $this->reservationModel->getAll();
 				$this->respond($reservations);
 			}
 			
+			/* GET /reservations/{id} */
 			public function show(int $id): void 
 			{
 				$reservation = $this->reservationModel->getById($id) ;
@@ -28,6 +31,7 @@
 				}
 			}
 			
+			/* POST /reservations  */
 			public function store(array $data): void
 			{
 				if ($this->reservationModel->create($data)) {
@@ -37,24 +41,27 @@
 				}
 			}
 			
+			/* PUT /reservations */
 			public function update(array $data): void 
 			{
-				if (isset($data['reservation_id']) && $this->reservationModel->update($data)) {
-					$this->respond(['message' => 'Reservation updated successfully']);
+				if (!isset($data['reservation_id'])) {
+					$this->respond(['error' => 'Reservation_id updated successfully']);
 				} else {
 					$this->respond(['error' => 'Failed to update reservation'], 400);
 				}
 			}
 			
+			/* DELETE /reservations/ {id}  */
 			public function destroy(int $id): void 
 			{
 				if ($this->reservationModel->delete($id)) 
 					$this->respond(['message' => 'Reservation deleted successfully']);
 				} else {
-					$this->respond(['error' => 'failed to delete reservation'], 400);
+					$this->respond(['error' => 'Failed to delete reservation'], 400);
 				}
 			}
 			
+			/* Helper method to respond witH JSON */
 			private function respond($data, int $statusCode = 200): void 
 			{
 				http_response_code($statusCode);
