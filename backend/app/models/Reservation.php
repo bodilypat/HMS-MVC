@@ -13,7 +13,7 @@ class Reservation
 	public function getAll(): array 
 	{
 		try {
-			$stmt = $this->pdo->query("SELECT * FROM reservations");
+			$stmt = $this->pdo->query("SELECT * FROM reservations ORDER BY reservation_id DESC");
 			return $stmt->fetchAll(PDO::FETCH_ASSOC);
 		} catch (PDOException $e) {
 			error_log("Reservation::getAll - " . $e->getMessage());
@@ -27,8 +27,7 @@ class Reservation
 		try {
 			$stmt = $this->pdo->prepare("SELECT * FROM reservations WHERE reservation_id = ? ");
 			$stmt->execute([$reservationId]);
-			$result = $stmt->fetch(PDO::FETCH_ASSOC);
-			return $result ?: null;
+			return $result = $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
 		} catch (PDOException $e) {
 			error_log("Reservation::getById - " . $e->getMessage());
 			return null;
@@ -38,7 +37,7 @@ class Reservation
 	/* Create a new reservation */
 	public function create(array $data): bool 
 	{
-		if (!this->isValidReservationData($data)) {
+		if (!$this->isValidReservationData($data)) {
 			return false;
 		}
 		
@@ -46,8 +45,9 @@ class Reservation
 			$stmt = $this->pdo->prepare("
 				INSERT INTO reservations (
 					guest_id, room_id, check_in, check_out,
-					reservation_status, payment_status
-				) VALUES(?, ?, ?, ?, ?, ?)
+					number_of_guests, reservation_status, payment_status
+					booking_source, special_request
+				) VALUES(?, ?, ?, ?, ?, ?, ?, ?)
 			");
 			
 			return $stmt->execute([
@@ -55,8 +55,11 @@ class Reservation
 				$data['room_id'],
 				$data['check_id'],
 				$data['check_out'],
+				$data['number_of_guest'],
 				$data['reservation_status'],
 				$data['payment_status']
+				$data['booking_source'],
+				$data['special_request'] ?? null,
 			]);
 		} catch (PDOException $e) {
 			error_log("Reservation::create - " . $e->getMessage());
@@ -67,13 +70,16 @@ class Reservation
 	/* Update an existing reservation */
 	public function update(array $data): bool
 	{
-		if (empty($data['reservation_id']) || !$this->isValidReservationData($data))  return false;
+		if (empty($data['reservation_id']) || !$this->isValidReservationData($data)) {
+			return false;
+		}
 		
 		try {
 			$stmt = $this->pdo->prepare("
 				UPDATE reservations SET 
 					guest_id = ?, room_id = ?, check_in = ?, check_out = ?,
-					reservation_status = ?, payment_status = ?
+					number_of_guests = ?, reservation_status = ?, payment_status = ?,
+					booking_source = ?, special_request = ?, updated_at = CURRENT_TIMESTAMP
 				WHERE reservation_id = ?
 			");
 			return $stmt->execute([
@@ -81,8 +87,11 @@ class Reservation
 				$data['room_id'],
 				$data['check_id'],
 				$data['check_out'],
+				$data['number_of_guests'],
 				$data['reservation_status'],
 				$data['payment_status'],
+				$data['booking_source'],
+				$data['special_request'] ?? null,
 				$data['reservation_id']
 			]);
 		} catch (PDOException $e) {
@@ -108,10 +117,11 @@ class Reservation
 	{
 		$requiredFields = [
 			'guest_id','room_id','check_in','check_out',
-			'reservation_status','payment_status'
+			'number_of_guests','reservation_status','payment_status'
+			'booking_source'
 		];
 		
-		foreach ($requiredField) {
+		foreach ($requiredField as $field) {
 			if (empty($data[$field])) {
 				return false;
 			}
@@ -120,7 +130,10 @@ class Reservation
 		$checkIn = strtotime($data['check_in']);
 		$checkOut = strtotime($data['check_out']);
 		
-		if ($checkIn === false || $checkOut === false || $checkIn > $checkOut) {
+		if (!$checkIn || !$checkOut || $checkIn > $checkOut) {
+			return false;
+		}
+		if (int)$data['number_of_guests'] <= 0) {
 			return false;
 		}
 		return true;
