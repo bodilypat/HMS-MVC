@@ -17,7 +17,7 @@ CREATE TABLE guests (
     first_name VARCHAR(100) NOT NULL,                 					-- Corrected spelling of 'first_name'
     last_name VARCHAR(100) NOT NULL,
     email VARCHAR(255) NOT NULL UNIQUE,               					-- Added email data type and uniqueness constraint
-    phone_number VARCHAR(15),                         					-- Adjusted to phone number format (can change the size if needed)
+    phone_number VARCHAR(20),                         					-- Adjusted to phone number format (can change the size if needed)
     address TEXT,                                     					-- Text for storing guest address, can be longer than VARCHAR
     id_type ENUM('Passport', 'National ID','Driver Lincence') NOT NULL, -- Enum for id_type to restrict values
     id_number VARCHAR(50) NOT NULL,                  					-- id_number should store the actual ID or passport number
