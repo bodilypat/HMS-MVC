@@ -13,24 +13,24 @@ CREATE TABLE users (
 
 /* Guests table */
 CREATE TABLE guests (
-    guest_id INT AUTO_INCREMENT PRIMARY KEY,          					-- Unique ID for each guest
-    first_name VARCHAR(100) NOT NULL,                 					-- Corrected spelling of 'first_name'
+    guest_id INT AUTO_INCREMENT PRIMARY KEY,          					
+    first_name VARCHAR(100) NOT NULL,                 					
     last_name VARCHAR(100) NOT NULL,
-    email VARCHAR(255) NOT NULL UNIQUE,               					-- Added email data type and uniqueness constraint
-    phone_number VARCHAR(20),                         					-- Adjusted to phone number format (can change the size if needed)
-    address TEXT,                                     					-- Text for storing guest address, can be longer than VARCHAR
-    id_type ENUM('Passport', 'National ID','Driver Lincence') NOT NULL, -- Enum for id_type to restrict values
-    id_number VARCHAR(50) NOT NULL,                  					-- id_number should store the actual ID or passport number
-    dob DATE NOT NULL,                                					-- Date of Birth (DOB)
-    nationality VARCHAR(50) DEFAULT 'Unknow',,                          -- Nationality can be a string
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,                     -- Check-in date
-    updated_at TIMESTAMP CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP  -- Check-out date
+    email VARCHAR(255) NOT NULL UNIQUE,               					
+    phone_number VARCHAR(20),                         					
+    address TEXT,                                     					
+    id_type ENUM('Passport', 'National ID','Driver Lincence') NOT NULL, 
+    id_number VARCHAR(50) NOT NULL,                  					
+    dob DATE NOT NULL,                                					
+    nationality VARCHAR(50) DEFAULT 'Unknow',,                          
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,                     
+    updated_at TIMESTAMP CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP  
 );
 
 /* Room_types table  */
 CREATE TABLE room_types (
     room_type_id INT AUTO_INCREMENT PRIMARY KEY,
-    type_name VARCHAR(50) UNIQUE NOT NULL, -- e.g., Single, Double
+    type_name VARCHAR(50) UNIQUE NOT NULL, 
     description TEXT,
     base_price DECIMAL(10, 2) NOT NULL CHECK (base_price >= 0)
 	default_capacity INT NOT NULL DEFAULT 1 CHECK (default_capacity > 0),
@@ -133,14 +133,14 @@ CREATE TABLE room_services (
 
 /* staff table */
 CREATE TABLE staffs (
-    staff_id INT AUTO_INCREMENT PRIMARY KEY,                              -- Unique staff ID
-    first_name VARCHAR(100) NOT NULL,                                       -- Staff first name
-    last_name VARCHAR(100) NOT NULL,                                        -- Staff last name
-    role ENUM('Receptionist', 'Housekeeper', 'Manager', 'Other') NOT NULL,  -- ENUM for staff role
-    email VARCHAR(255) NOT NULL UNIQUE,                                     -- Email with UNIQUE constraint
-    phone_number VARCHAR(15),                                               -- Phone number (adjust length as needed)
-    salary DECIMAL(10, 2) NOT NULL CHECK (salary >= 0),                                         -- Salary with two decimal places
-    hire_date DATE NOT NULL,                                                -- Hire date
+    staff_id INT AUTO_INCREMENT PRIMARY KEY,                              
+    first_name VARCHAR(100) NOT NULL,                                       
+    last_name VARCHAR(100) NOT NULL,                                        
+    role ENUM('Receptionist', 'Housekeeper', 'Manager', 'Other') NOT NULL,  
+    email VARCHAR(255) NOT NULL UNIQUE,                                     
+    phone_number VARCHAR(15),                                               
+    salary DECIMAL(10, 2) NOT NULL CHECK (salary >= 0),                                         
+    hire_date DATE NOT NULL,                                               
     status ENUM('Active', 'Inactive') NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
@@ -148,25 +148,24 @@ CREATE TABLE staffs (
 
 /* Housekeeping table */
 CREATE TABLE housekeepings (
-    housekeeping_id INT AUTO_INCREMENT PRIMARY KEY,                                  -- Unique housekeeping record ID
-    room_id INT NOT NULL,                                                           -- Foreign key referencing Rooms.room_id
-    staff_id INT NOT NULL,                                                          -- Foreign key referencing Staff.staff_id
-    cleaning_date DATETIME NOT NULL,                                                -- Date and time of cleaning
-    cleaning_status ENUM('Pending', 'In Process', 'Completed') NOT NULL,             -- ENUM for cleaning status
-    CONSTRAINT fk_room FOREIGN KEY (room_id) REFERENCES rooms(room_id) ON DELETE CASCADE, -- Foreign key constraint for room_id
-    CONSTRAINT fk_staff FOREIGN KEY (staff_id) REFERENCES staff(staff_id) ON DELETE CASCADE, -- Foreign key constraint for staff_id
-    CONSTRAINT chk_cleaning_date CHECK (cleaning_date <= NOW())                       -- Check constraint to ensure cleaning_date is not in the future
+    housekeeping_id INT AUTO_INCREMENT PRIMARY KEY,                                  
+    room_id INT NOT NULL,                                                           
+    staff_id INT NOT NULL,                                                         
+    cleaning_date DATETIME NOT NULL,                                               
+    cleaning_status ENUM('Pending', 'In Process', 'Completed') NOT NULL,             
+    CONSTRAINT fk_room FOREIGN KEY (room_id) REFERENCES rooms(room_id) ON DELETE CASCADE, 
+    CONSTRAINT fk_staff FOREIGN KEY (staff_id) REFERENCES staff(staff_id) ON DELETE CASCADE, 
+    CONSTRAINT chk_cleaning_date CHECK (cleaning_date <= NOW())                      
 );
 
 /* Feedback Table */
 CREATE TABLE feedbacks (
-    feedback_id INT AUTO_INCREMENT PRIMARY KEY,                                  -- Unique feedback ID
-    guest_id INT NOT NULL,                                                       -- Foreign key referencing Guests.guest_id
-    reservation_id INT NOT NULL,                                                 -- Foreign key referencing Reservations.reservation_id
-    rating INT NOT NULL CHECK (rating BETWEEN 1 AND 5),                           -- Rating (1-5 stars) with check constraint
-    comments TEXT,                                                               -- Comments about the feedback (use TEXT for potentially long feedback)
-    feedback_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,                    -- Date and time when the feedback was submitted
-    CONSTRAINT fk_guest FOREIGN KEY (guest_id) REFERENCES guests(guest_id) ON DELETE CASCADE, -- Foreign key constraint for guest_id
-    CONSTRAINT fk_reservation FOREIGN KEY (reservation_id) REFERENCES reservations(reservation_id) ON DELETE CASCADE -- Foreign key constraint for reservation_id
-);
+    feedback_id INT AUTO_INCREMENT PRIMARY KEY,                                  
+    guest_id INT NOT NULL,                                                       
+    reservation_id INT NOT NULL,                                                 
+    rating INT NOT NULL CHECK (rating BETWEEN 1 AND 5),                          
+    comments TEXT,                                                               
+    feedback_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,                    
+    CONSTRAINT fk_guest FOREIGN KEY (guest_id) REFERENCES guests(guest_id) ON DELETE CASCADE,
+    CONSTRAINT fk_reservation FOREIGN KEY (reservation_id) REFERENCES reservations(reservation_id) ON DELETE CASCADE 
 
