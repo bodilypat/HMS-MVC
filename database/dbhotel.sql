@@ -49,7 +49,7 @@ CREATE TABLE rooms (
     price_per_night DECIMAL(10, 2) NOT NULL CHECK (price_per_night >= 0),                     
     room_status ENUM('Available', 'Occupied', 'Maintenance') NOT NULL DEFAULT 'Available', 
     room_description TEXT,                                       
-    beds_count INT NOT NULL CHECK (beds_count),                                     
+    beds_count INT NOT NULL CHECK (beds_count > 0),                                     
     capacity INT NOT NULL CHECK (capacity >= beds_count),                                       
 	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	updated_at TIMESTAMP CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -63,7 +63,7 @@ CREATE TABLE reservations (
     room_id INT NOT NULL,                                           
     check_in DATE NOT NULL,                                          
     check_out DATE NOT NULL,
-	number_of_guests INT NOT NULL DEFAULT 1 CHECK (number_of_checks > 0),
+    number_of_guests INT NOT NULL DEFAULT 1 CHECK (number_of_checks > 0),
     reservation_status ENUM('Pending','Confirmed','Checked-in','Checked-out','Cancelled') NOT NULL DEFAULT 'Pending',  
     payment_status ENUM('Pending','Paid','Partially Paid','Refunded') NOT NULL DEFAULT 'Pending',
 	booking_source ENUM('Website','Phone','Walk-in','Traval Agency','OTA') NOT NULL 'Website',
@@ -84,21 +84,20 @@ CREATE TABLE payments (
     payment_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,                                          
     payment_method ENUM('Credit Card', 'Cash', 'Online Transfer', 'Other') NOT NULL, 
     payment_status ENUM('Completed', 'Pending', 'Failed') NOT NULL DEFAULT 'Pending',   
-    transaction_reference VARCHAR(100) DEFAULT NULL, 
+    transaction_reference VARCHAR(100), 
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 	
-    CONSTRAINT fk_payments_reservation FOREIGN KEY (reservation_id) REFERENCES reservations(reservation_id) ON DELETE CASCADE,  
-    CONSTRAINT chk_payment_amount_positive CHECK (amount_paid >= 0)                      
+    CONSTRAINT fk_payments_reservation FOREIGN KEY (reservation_id) REFERENCES reservations(reservation_id) ON DELETE CASCADE,            
 );
 
 /* Billings table */
 CREATE TABLE billings (
     billing_id INT AUTO_INCREMENT PRIMARY KEY,                              
     reservation_id INT NOT NULL,                                             
-    service_charge DECIMAL(10, 2) DEFAULT 0.00,                             
-    discount DECIMAL(10, 2) DEFAULT 0.00,                                    
-    total_amount DECIMAL(10, 2) NOT NULL,                                   
+    service_charge DECIMAL(10, 2) DEFAULT 0.00 	CHECK (service_charge >= 0),                             
+    discount DECIMAL(10, 2) DEFAULT 0.00 CHECK (discount >= 0),                                    
+    total_amount DECIMAL(10, 2) NOT NULL CHECK (total_amount >= 0),                                   
     payment_status ENUM('Paid', 'Unpaid') NOT NULL,                          
     CONSTRAINT fk_reservation FOREIGN KEY (reservation_id) REFERENCES reservations(reservation_id) ON DELETE CASCADE, 
     CONSTRAINT chk_total_amount CHECK (total_amount >= 0)                    
@@ -140,10 +139,11 @@ CREATE TABLE staffs (
     role ENUM('Receptionist', 'Housekeeper', 'Manager', 'Other') NOT NULL,  -- ENUM for staff role
     email VARCHAR(255) NOT NULL UNIQUE,                                     -- Email with UNIQUE constraint
     phone_number VARCHAR(15),                                               -- Phone number (adjust length as needed)
-    salary DECIMAL(10, 2) NOT NULL,                                         -- Salary with two decimal places
+    salary DECIMAL(10, 2) NOT NULL CHECK (salary >= 0),                                         -- Salary with two decimal places
     hire_date DATE NOT NULL,                                                -- Hire date
-    status ENUM('Active', 'Inactive') NOT NULL,                             -- ENUM for staff status
-    CONSTRAINT chk_salary CHECK (salary >= 0)                               -- Check to ensure salary is not negative
+    status ENUM('Active', 'Inactive') NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 /* Housekeeping table */
