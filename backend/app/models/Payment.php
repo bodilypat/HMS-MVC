@@ -34,26 +34,41 @@
 			}
 		}
 		
+		/* Get payments by reservation */
+		public function getByReservation(int $reservationId): array
+		{
+			try {
+				$stmt = $this->prepare("SELECT * FROM paymemts WHERE reservation_id = ?");
+				$stmt->execute([$reservationId]);
+				return $stmt->fetchAll(PDO::FETCH_ASSOC);
+			} catch (PDOException $e) {
+				error_log("Payment::getByReservationId - " . $e->getMessage());
+				return [];
+			}
+		}
+		
 		/* Create new payment */
 		public function create(array $data): bool 
 		{
-			if (!$this->isValidPaymentData($data)) {
+			if (!$this->isValidData($data)) {
 				return false;
 			}
 			try {
 				$stmt = $this->pdo->prepare("
 					INSERT INTO payments (
-						reservation_id, amount_paid, payment_date,
-						payment_method, payment_status
-					) VALUES(?, ?, ?, ?, ?)
+						reservation_id, amount_paid, currency,
+						payment_date, payment_method, payment_status, transaction_reference
+					) VALUES(?, ?, ?, ?, ?, ?, ?)
 				");
 				
 				return $stmt->execute([
 					$data['reservation_id'],
-					$data['amount_id'],
-					$data['payment_date'],
+					$data['amount_paid'],
+					$data['current'] ?? 'USD',
+					$data['payment_date'] ?? date('Y-m-d H:i:s'),
 					$data['payment_method'],
-					$data['payment_status']
+					$data['payment_status'] ?? 'Pending',
+					$data['transaction_reference'] ?? null
 				]);
 			} catch(PDOException $e) {
 				error_log("Payment::create - " . $e->getMessage());
@@ -62,7 +77,7 @@
 		}
 		
 		/* Update existing payment */
-		public function update(array $data): bool
+		public function update(int $id, array $data): bool
 		{
 			if (empty($data['payment_id']) || !$this->isValidPaymentData($data)) {
 				return false;
@@ -70,17 +85,18 @@
 			try {
 				$stmt = $this->pdo->prepare("
 					UPDATE payments SET
-						reservation_id = ?, amount_paid = ?, payment_date = ?,
-						payment_method = ?, payment_status = ?
+						amount_paid = ?, currency = ?, payment_date = ?,
+						payment_method = ?, payment_status = ?, transaction_reference = ?, updated_at = NOW()
 					WHERE payment_id = ?
 				");
 				return $stmt->execute([
-					$data['reservation_id'],
 					$data['amount_paid'],
+					$data['currency'],
 					$data['payment_date'],
 					$data['payment_method'],
-					$data['payment_status',
-					$data['payment_id']
+					$data['payment_status'],
+					$data['transaction_reference'] ?? null,
+					$id
 				]);
 			} catch (PDOException $e) {
 				error_log("Payment::update - " . $e->getMessage());
@@ -101,42 +117,15 @@
 		}
 		
 		/* Validate payment data */
-		private function isValidPaymentData(array $data): bool 
+		private function isValidData(array $data): bool 
 		{
-			$requiredField = [
-				'reservation_id', 'amount_paid', 'payment_date',
-				'payment_method', 'payment_status'
-			];
+			$validMethods = ['Credit card','Cash','Online Transfer','Other'];
+			$validStatuses = ['Completed','Pending','Failed'];
 			
-			foreach ($requiredFields as $field) {
-				if (empty($data[$field])) {
-					return false;
-				}
-			}
-			
-			/* Validate amount */
-			if (!is_numeric($data['amount_paid') || $data['amount_paid'] < 0) {
-				return false;
-			}
-			
-			/* Validate payment method */
-			$validMethods = ['Credit_card','Cash','Online Transfer','Other'];
-			if (!in_array($data['payment_method'], $validMethods, true)) 
-			{
-				return false;
-			}
-			
-			/* Validate payment status */
-			$validStatus = ['Completed','Pending','Failed'];
-			if (!in_array($data['payment_status'], $validStatuses, true)) {
-				return false;
-			}
-			
-			/* Validate data format */
-			if (strtotime($data['payment_date']) === false) {
-				return false;
-			}
-			return true;
+			return isset($data['reservation_id'], $data['amount_paid'], $data['payment_method']) && 
+			       is_numeric($data['amount_paid']) && $data['amount_paid'] >= 0 && 
+				   in_array($data['payment_method'], $validMethods, true) && 
+				   (!isset($data['payment_status']) || in_array($data['payment_status'], $validStatuses, true));
 		}
 	}
 	
