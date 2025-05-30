@@ -104,8 +104,12 @@ CREATE TABLE billings (
 CREATE TABLE services (
     service_id INT AUTO_INCREMENT PRIMARY KEY,
     service_type VARCHAR(100) NOT NULL,
+    category VARCHAR(50) DEFAULT NULL,	
     description TEXT,
-    price DECIMAL(10, 2) NOT NULL
+    price DECIMAL(10, 2) NOT NULL CHECK (price >= 0),
+    is_active BOOLEAN NOT NULL DEFAULT TRUE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 /* Room_services table */
@@ -113,11 +117,15 @@ CREATE TABLE room_services (
     room_service_id INT AUTO_INCREMENT PRIMARY KEY,
     reservation_id INT NOT NULL,
     service_id INT NOT NULL,
-    service_request_time DATETIME NOT NULL,
-    service_status ENUM('Requested', 'In Progress', 'Delivered') NOT NULL,
+    service_request_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    service_status ENUM('Requested', 'In Progress', 'Delivered','Cancelled') NOT NULL DEFAULT 'Requested',
+    notes TEXT DEFAULT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     CONSTRAINT chk_service_request_time CHECK (service_request_time <= NOW()),
+	
     FOREIGN KEY (reservation_id) REFERENCES reservations(reservation_id) ON DELETE CASCADE,
-    FOREIGN KEY (service_id) REFERENCES services(service_id)
+    FOREIGN KEY (service_id) REFERENCES services(service_id) ON DELETE SET NULL
 );
 
 /* staff table */
