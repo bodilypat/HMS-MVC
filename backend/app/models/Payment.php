@@ -8,7 +8,7 @@
 			$this->pdo = $pdo;
 		}
 		
-		/* Get all payment */
+		/* Get all payment , List all payment*/
 		public function getAll(): array 
 		{
 			try {
@@ -20,7 +20,7 @@
 			}
 		}
 		
-		/* Get payment by ID */
+		/* Get payment by ID , fetch one payment*/
 		public function getById(int $paymentId): ?array
 		{
 			try {
@@ -34,7 +34,7 @@
 			}
 		}
 		
-		/* Get payments by reservation */
+		/* Get payments by reservation , Useful for invoices per booking */
 		public function getByReservation(int $reservationId): array
 		{
 			try {
@@ -47,7 +47,7 @@
 			}
 		}
 		
-		/* Create new payment */
+		/* Create new payment , Handles defaults and nullables */
 		public function create(array $data): bool 
 		{
 			if (!$this->isValidData($data)) {
@@ -76,7 +76,7 @@
 			}
 		}
 		
-		/* Update existing payment */
+		/* Update existing payment, Fully editable */
 		public function update(int $id, array $data): bool
 		{
 			if (empty($data['payment_id']) || !$this->isValidPaymentData($data)) {
@@ -104,7 +104,7 @@
 			}
 		}
 		
-		/* Delete a payment */
+		/* Delete a payment, Securely deletes by ID */
 		public function delete(int $paymentId): bool 
 		{
 			try {
@@ -116,7 +116,7 @@
 			}
 		}
 		
-		/* Validate payment data */
+		/* Validate payment data, Validates required fields and enums */
 		private function isValidData(array $data): bool 
 		{
 			$validMethods = ['Credit card','Cash','Online Transfer','Other'];
