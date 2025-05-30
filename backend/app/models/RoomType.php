@@ -8,7 +8,7 @@
 			$this->pdo = $pdo;
 		}
 		
-		/* Get all room types */
+		/* Get all room types, ordered by base price */
 		public function getAll(): array
 		{
 			try {
@@ -20,16 +20,15 @@
 			}
 		}
 		
-		/* GET room type by ID */
-		public function getById(int $id): ?array
+		/* GET room type by NAME*/
+		public function getByName(string $typeName): ?array
 		{
 			try {
-				$stmt = $this->pdo->prepare("SELECT * FROM room_types WHERE room_type_id = ?");
+				$stmt = $this->pdo->prepare("SELECT * FROM room_types WHERE type_name = ? ");
 				$stmt->execute([$id]);
-				$result = $stmt->fetch(PDO::FETCH_ASSOC);
-				return $result ?: null;
+				return $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
 			} catch (PDOException $e) {
-				error_log("RoomType::getById - " . $e->getMessage());
+				error_log("RoomType::getByName - " . $e->getMessage());
 				return null;
 			}
 		}
