@@ -14,7 +14,7 @@
 		public function inde(): void 
 		{
 			$payments = $this->paymentModel->getAll();
-			$this->respond($payments);
+			$this->respondJSON($payments);
 		}
 		
 		/* GET /payments/{id} - Get a single payment */
@@ -23,10 +23,16 @@
 			$payment = $this->paymentModel->getById($id);
 			
 			if ($payment) {
-				$this->respond($payment);
+				$this->respondJSON($payment);
 			} else {
-				$this->respond(['error' => 'Payment not found'], 404);
+				$this->respondJSON(['error' => 'Payment not found'], 404);
 			}
+		}
+		/* GET /payments/reservation/ {id}  */
+		public function byReservation(int $reservationId): void
+		{
+			$payments = $this->paymentModel->getByReservationId($reservationId);
+			$this->respondJSON($payments);
 		}
 		
 		/* POST /payments - Create a new payment */
@@ -40,7 +46,7 @@
 		}
 		
 		/* PUT /payments/{id} - Update an existing payment */
-		public function update(array $data): void 
+		public function update(int $id, array $data): void 
 		{
 			if (empty($data['payment_id'])) {
 				$this->respond(['error' => 'Missing payment_id'], 400);
@@ -64,7 +70,7 @@
 		}
 		
 		/* send JSON response */
-		private function respond($data, int $statusCode = 2000: void 
+		private function respondJSON($data, int $statusCode = 2000: void 
 		{
 			http_response_code($statusCose);
 			header('Content-Type: application/json');
