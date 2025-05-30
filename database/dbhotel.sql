@@ -80,12 +80,16 @@ CREATE TABLE payments (
     payment_id INT AUTO_INCREMENT PRIMARY KEY,                              
     reservation_id INT NOT NULL,                                              
     amount_paid DECIMAL(10, 2) NOT NULL CHECK (amount_paid >= 0),
-	currency 
-    payment_date DATETIME NOT NULL,                                          
+    currency VARCHAR(3) NOT NULL DEFAULT 'USD',
+    payment_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,                                          
     payment_method ENUM('Credit Card', 'Cash', 'Online Transfer', 'Other') NOT NULL, 
-    payment_status ENUM('Completed', 'Pending', 'Failed') NOT NULL,           
-    CONSTRAINT fk_reservation FOREIGN KEY (reservation_id) REFERENCES reservations(reservation_id) ON DELETE CASCADE,  
-    CONSTRAINT chk_amount_paid CHECK (amount_paid >= 0)                      
+    payment_status ENUM('Completed', 'Pending', 'Failed') NOT NULL DEFAULT 'Pending',   
+    transaction_reference VARCHAR(100) DEFAULT NULL, 
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+	
+    CONSTRAINT fk_payments_reservation FOREIGN KEY (reservation_id) REFERENCES reservations(reservation_id) ON DELETE CASCADE,  
+    CONSTRAINT chk_payment_amount_positive CHECK (amount_paid >= 0)                      
 );
 
 /* Billings table */
