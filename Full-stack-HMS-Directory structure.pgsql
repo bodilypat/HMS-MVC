@@ -1,4 +1,4 @@
-Fullstack-Hotel-Management-System(no framework) /
+Full-stack-Hotel-Management-System(no framework) /
 ├── backend/                                    # PHP backend
 │   │  
 │   ├── public/                                 # Web-accessible entry point
