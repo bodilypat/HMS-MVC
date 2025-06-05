@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<title>Guest Feedback</title>
+	<link rel="stylesheet" href="../styles/feedback.css" />
+</head>
+<body>
+	<div class="feedback-container">
+		<h1>We Value Your FeedBack</h1>
+		<form for="feedback-form">
+			<label for="guest-name">Name:</label>
+			<input type="text" id="guest_name" name="guest_name" required>
+		
+			<label for="email">Email: </label>
+			<input type="email" id="email" name="email" required />
+			
+			<label for="rating">Rating:</label>
+			<select id="rating" name="rating" required>
+				<option value="" disable selected>Select rating</option>
+				<option value="5" > 5 - Excellent</option>
+				<option value="4" > 4 - Very Good</option>
+				<option value="3" > 3 - Good</option>
+				<option value="2" > 2 - Fair</option>
+				<option value="1" > 1 - Poor</option>
+			</select>
+			
+			<label for="comments">Comment: </label>
+			<textarea id="comments" name="comments" rows="5" placeholder="Your feedback..." required></textarea>
+			
+			<button type="submit">Submit Feedback</button>
+		</form>
+		<div id="response-message" class="hidden"></div>
+	</div>
+	<script src="../scripts/utils/api.js"></script>
+	<script src="../scripts/feedback.js"></script>
+</body>
+</html>
