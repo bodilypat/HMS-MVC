@@ -33,6 +33,26 @@ async function postRequest(endpoint, data) {
 	return res.json();
 }
 
+asyc function apiRequest(endpoint, method = 'GET', data = null) {
+	const config = {
+		method,
+		headers: {
+			'Content-Type': 'application/json',
+		}
+	};
+	if (data) {
+		config.body = JSON.stringify(data);
+	}
+	
+	const response = await fetch('http://localhost/hotel/backend/routes/api.php/${endpoint}', config);
+	
+	if (!response.ok) {
+		throw new error('API Error: ${response.status}');
+	}
+	return await response.json();
+}
+
+
 /* Specific API function */
 export asyn function fetchRooms() {
 	return getRequest('/rooms');
