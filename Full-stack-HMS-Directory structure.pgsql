@@ -1,5 +1,5 @@
 Full-stack-Hotel-Management-System(no framework) /
-├── backend/                                    # PHP backend
+├── backend/                                    # PHP backend (MVC structure)
 │   │  
 │   ├── public/                                 # Web-accessible entry point
 │   │   └── index.php                           # Front controller 
@@ -9,7 +9,7 @@ Full-stack-Hotel-Management-System(no framework) /
 │   │   ├── dbConnect.php                       # DB config
 │   │   └── .env                                # Environment variables 
 │   │     
-│   ├── core/                                   # Core libraries/utilities 
+│   ├── core/                                   # Core libraries/utilities (request handing system) 
 │   │   ├── Router.php                    
 │   │   ├── Request.php                   
 │   │   ├── Response.php                  
