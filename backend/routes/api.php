@@ -2,8 +2,8 @@
 	use Core\Router;
 	use App\Controllers\GuestController;
 	use App\Controllers\RoomController;
-	use App\Controllers\ReservationController;
 	use App\Controllers\RoomTypeController;
+	use App\Controllers\ReservationController;
 	use App\Controllers\PaymentController;
 	use App\Controllers\BillingController;
 	use App\Controllers\ServiceController;
@@ -12,47 +12,56 @@
 	use App\Controllers\HousekeepingController;
 	use App\Controllers\FeedbackController;
 	
-	/* Autoload or manual requires for controllers */
-	require_once '../app/controllers/GuestController.php';
-	require_once '../app/controllers/RoomController.php';
-	require_once '../app/controllers/ReservationController.php';
-	
-	/* Init DB connection  */
+	/* Setup DB connection  */
 	$pdo = new PDO('mysql:host=localhost;dbname=hotel_db', 'root', '');
 	
 	/* Instantiate Controllers */
 	$guestController = new GuestController($pdo);
+	$roomController = new RoomController($pdo);
+	$roomTypeController = new RoomTypeConroller($pdo);
 	$reservationController = new ReservationController($pdo);
+	
+	/* Autoload or manual requires for controllers */
+	require_once '../app/controllers/GuestController.php';
+	require_once '../app/controllers/RoomController.php';
+	require_once '../app/controllers/RoomTypeController.php';
+	require_once '../app/controllers/ReservationController.php';
 	
 	/* Guest Routes */
 	
-	$router->get('/api/guests', [GuestController::class,'index']);
-	$router->get('/api/guests/{id}', [GuestController::class,'show']);
-	$router->post('/api/guests', [GuestController::class,'store']);
-	$router->put('/api/guests/{id}', [GuestController::class,'update']);
-	$router->delete('/api/guests/{id}', [GuestController::Class,'destroy']);
+	$router::get('/api/guests', [$guestController, 'index']);
+	$router::get('/api/guests/{id}', [$guestController,'show']);
+	$router::post('/api/guests', [$guestController, 'store']);
+	$router::put('/api/guests/{id}', [$guestController, 'update']);
+	$router::delete('/api/guests/{id}', [$guestController, 'destroy']);
 	
 	/* Room Routes */
-	$router->get('/api/rooms', [RoomController::class,'index']);
-	$router->get('/api/rooms/{id}', [RoomController::class, 'show']);
-	$router->post['/api/rooms', [RoomController::class, 'store']);
-	$router->put('/api/rooms/{id}', [RoomController::class, 'update']);
-	$router->delete('/api/rooms/{id}', [RoomController::class,'destroy']);
-	
-	/* Reservation Routes */
-	$router->get('/api/reservation', [ReservationController::class, 'index']);
-	$router->get('/api/reservations/{id}', [ReservationController::class, 'show']);
-	$router->post('/api/reservations', [ReservationController::class, 'store']);
-	$router->put('/api/reservations/{id}', [ReservationController::class, 'update']);
-	$router->delete('/api/reservations/{id}', [ReservationController::class, 'destroy']);
+	$router::get('/api/rooms', [$roomController,'index']);
+	$router::get('/api/rooms/{id}', [$roomController, 'show']);
+	$router::post['/api/rooms', [$roomController, 'store']);
+	$router::put('/api/rooms/{id}', [$roomController, 'update']);
+	$router::delete('/api/rooms/{id}', [$roomController,'destroy']);
 	
 	/* Room Type Routes */
-	$router->get('/api/room_types', [RoomTypeController::class, 'index']);
-	$router->get('/api/room_types', [RoomTypeController,'store']);
+	$router::get('/api/room-types', [$roomTypeController::class, 'index']);
+	$router::get('/api/room-types/{id}', [$roomTypeController::class,'show']);
+	$router::post('/api/room-types', [$roomTypeController::class,'store']);
+	$router::put('/api/room-types', [$roomTypeController,'update']);
+	$router::delete('/api/room-types/{id}', [$roomTypeController,'destroy']);
+	
+	/* Reservation Routes */
+	$router::get('/api/reservation', [$eservationController::class, 'index']);
+	$router::get('/api/reservations/{id}', [$reservationController::class, 'show']);
+	$router::post('/api/reservations', [$reservationController::class, 'store']);
+	$router::put('/api/reservations/{id}', [$reservationController::class, 'update']);
+	$router::delete('/api/reservations/{id}', [$reservationController::class, 'destroy']);
+	
+	
 	
 	/* Payment Routes */
-	$router->get('/api/payments/{id}', [PaymentController::class, 'show']);
-	$router->post('/api/payments', [PaymentController::class, 'store']);
+	$router::get('/api/payments/{id}', [PaymentController::class, 'show']);
+	$router::post('/api/payments', [PaymentController::class, 'store']);
+	$router::
 	
 	/*  billing Routes*/
 	$router->get('/api/billings/{reservationId}', [BillingController::class, 'generate']);
