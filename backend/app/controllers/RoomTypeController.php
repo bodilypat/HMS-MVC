@@ -1,4 +1,5 @@
 <?php
+
 	require_once __DIR__ . '/../models/RoomType.php';
 	
 	class RoomTypeController 
@@ -31,6 +32,11 @@
 		/* POST /room_types  */
 		public function store(array $data): void 
 		{
+			if (empty($data['name']) || empty($data['price']) || !is_numeric($data['price'])) {
+				$this->respond(['error' => 'Valid name and price are required'], 422);
+				return;
+			}
+			
 			if ($this->roomTypeModel->create($data)) {
 				$this->respond(['message' => 'Room type created successfully'], 201);
 			} else {
@@ -42,12 +48,12 @@
 		public function update(array $data): void 
 		{
 			if (empty($data['room_type_id'])) {
-				$this->respond(['error' => 'room_type_id is required'], 400);
+				$this->respond(['error' => 'room_type_id is required'], 422);
 				return ;
 			}
 			
 			if ($this->roomTypeModel->update($data)) {
-				$this->respond(['message' => 'Room type updated successffully']);
+				$this->respond(['message' => 'Room type updated successfully']);
 			} else {
 				$this->respond(['error' => 'Failed update room type'], 400);
 			}
@@ -57,7 +63,7 @@
 		public function destroy(int $id): void 
 		{
 			if ($this->roomTypeModel->delete($id)) {
-				$this->respond(['message' => 'Room type deleted successffully']);
+				$this->respond(['message' => 'Room type deleted successfully']);
 			} else {
 				$this->respond(['error' => 'Failed to delete room type'], 400);
 			}
