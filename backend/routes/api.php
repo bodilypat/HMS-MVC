@@ -14,6 +14,7 @@
 	
 	/* Autoload or manual requires for controllers */
 	require_once '../app/controllers/GuestController.php';
+	require_once '../app/controllers/RoomController.php';
 	require_once '../app/controllers/ReservationController.php';
 	
 	/* Init DB connection  */
@@ -48,10 +49,6 @@
 	/* Room Type Routes */
 	$router->get('/api/room_types', [RoomTypeController::class, 'index']);
 	$router->get('/api/room_types', [RoomTypeController,'store']);
-	
-	
-	
-	
 	
 	/* Payment Routes */
 	$router->get('/api/payments/{id}', [PaymentController::class, 'show']);
