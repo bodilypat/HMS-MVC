@@ -17,7 +17,7 @@ Full-stack-Hotel-Management-System(no framework) /
 │   │   ├── Database.php                 
 │   │   └── Logger.php         
 │   │     
-│   ├── app/                                    # Application Logic 
+│   ├── app/                                    # MVC - style organization , Application Logic 
 │   │   ├── controllers/                        # Controllers for each Domain
 │   │   │   ├── GuestController.php
 │   │   │   ├── RoomTypeController.php
@@ -65,8 +65,8 @@ Full-stack-Hotel-Management-System(no framework) /
 │   │       └── resetPassword.php                 
 │   │   
 │   ├── routes/                           # Route definitions
-│   │   ├── api.php                       # API routing
-│   │   └── web.php                       # Optional backend-rendered view 
+│   │   ├── api.php                       # API base logic routing
+│   │   └── web.php                       # Optional server-rendered content
 │   │
 │   ├── storages/                            
 │   │   ├── logs/ 
@@ -112,8 +112,8 @@ Full-stack-Hotel-Management-System(no framework) /
 │   │   ├── auth.js  
 │   │   ├── dashboard.js      
 │   │   └── utils/  
-│   │       ├── api.js                    # API fetch wrappers
-│   │       └── dom.js                    # DOM helper functions    
+│   │       ├── api.js                    # Abstracted API request fetch wrappers
+│   │       └── dom.js                    # DOM Maniputation helpers functions    
 │   │         
 │   ├── assets/                           # Static assets
 │   │   ├── images/
