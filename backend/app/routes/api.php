@@ -12,6 +12,14 @@
 	use App\Controllers\HousekeepingController;
 	use App\Controllers\FeedbackController;
 	
+	/* Autoload or manual requires for controllers */
+	require_once '../app/controllers/GuestController.php';
+	require_once '../app/controllers/RoomController.php';
+	require_once '../app/controllers/RoomTypeController.php';
+	require_once '../app/controllers/ReservationController.php';
+	require_once '../app/controllers/PaymentController.php';
+	require_once '../app/controllers/ServiceController.php';
+	
 	/* Setup DB connection  */
 	$pdo = new PDO('mysql:host=localhost;dbname=hotel_db', 'root', '');
 	
@@ -20,12 +28,8 @@
 	$roomController = new RoomController($pdo);
 	$roomTypeController = new RoomTypeConroller($pdo);
 	$reservationController = new ReservationController($pdo);
-	
-	/* Autoload or manual requires for controllers */
-	require_once '../app/controllers/GuestController.php';
-	require_once '../app/controllers/RoomController.php';
-	require_once '../app/controllers/RoomTypeController.php';
-	require_once '../app/controllers/ReservationController.php';
+	$paymentController = new PaymentController($pdo);
+	$serviceController = new ServiceController($pdo);
 	
 	/* Guest Routes */
 	
@@ -43,11 +47,11 @@
 	$router::delete('/api/rooms/{id}', [$roomController,'destroy']);
 	
 	/* Room Type Routes */
-	$router::get('/api/room-types', [$roomTypeController::class, 'index']);
-	$router::get('/api/room-types/{id}', [$roomTypeController::class,'show']);
-	$router::post('/api/room-types', [$roomTypeController::class,'store']);
-	$router::put('/api/room-types', [$roomTypeController,'update']);
-	$router::delete('/api/room-types/{id}', [$roomTypeController,'destroy']);
+	$router::get('/api/room_types', [$roomTypeController::class, 'index']);
+	$router::get('/api/room_types/{id}', [$roomTypeController::class,'show']);
+	$router::post('/api/room_types', [$roomTypeController::class,'store']);
+	$router::put('/api/room_types', [$roomTypeController,'update']);
+	$router::delete('/api/room_types/{id}', [$roomTypeController,'destroy']);
 	
 	/* Reservation Routes */
 	$router::get('/api/reservation', [$eservationController::class, 'index']);
@@ -56,20 +60,24 @@
 	$router::put('/api/reservations/{id}', [$reservationController::class, 'update']);
 	$router::delete('/api/reservations/{id}', [$reservationController::class, 'destroy']);
 	
-	
-	
 	/* Payment Routes */
-	$router::get('/api/payments/{id}', [PaymentController::class, 'show']);
-	$router::post('/api/payments', [PaymentController::class, 'store']);
-	$router::
+	$router::get('/api/payments', [$paymentController,'index']);
+	$router::get('/api/payments/{id}', [$paymentController, 'show']);
+	$router::get('/api/payments/reservation/{id}', [$paymentController, 'byReservation']);
+	$router::post('/api/payments', [$paymentController, 'store');
+	$routes::put('/api/payments/{id}', [$paymentController, 'update']);
+	$routes::delete('/api/payments/{id}', [$paymentController, 'destroy']);
 	
 	/*  billing Routes*/
-	$router->get('/api/billings/{reservationId}', [BillingController::class, 'generate']);
-	$router->post['/api/billings', [BillingController::class, 'store']);
+	$router::get('/api/billings/{reservationId}', [BillingController::class, 'generate']);
+	$router::post['/api/billings', [BillingController::class, 'store']);
 	
 	/* Service Routes */
-	$router->get('/api/services', [ServiceController::class, 'index']);
-	$router->post('/api/services', [ServiceController::class, 'store']);
+	$router::get('/api/services', [$serviceController, 'index']);
+	$router::get('/api/services/{id}', [$serviceController, 'show']);
+	$router::post('/api/services', [$serviceController, 'store']);
+	$router::put('/api/services', [$serviceController, 'update']);
+	$router::delete('/api/services/{id}', [$serviceController,'destroy']);
 	
 	/* Room Services Routes */
 	$router->post('/api/room_services', [RoomServiceController::class, 'store']);
