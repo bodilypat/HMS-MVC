@@ -1,90 +1,99 @@
-<?php
-	require_once __DIR__ .'/../app/controllers/GuestController.php';
-	require_once __DIR__ .'/../app/controllers/RoomTypeController.php';
-	require_once __DIR__ .'/../app/controllers/RoomController.php';
-	require_once __DIR__ .'/../app/controllers/ReservationController.php';
-	require_once __DIR__ .'/../app/controllers/ServiceController.php';
-	require_once __DIR__ .'/../app/controllers/RoomServiceController.php';
-	require_once __DIR__ .'/../app/controllers/PaymentController.php';
-	require_once __DIR__ .'/../app/controllers/BillingController.php';
-	require_once __DIR__ .'/../app/controllers/StaffController.php';
-	require_once __DIR__ .'/../app/controllers/HousekeepingController.php';
-	require_once __DIR__ .'/../app/controllers/FeedbackController.php';
-	require_once __DIR__ .'/../app/core/Database.php';
+<?php	
+	use Core\Router;
+	use App\Controllers\GuestController;
+	use App\Controllers\RoomController;
+	use App\Controllers\RoomTypeController;
+	use App\Controllers\ReservationController;
+	use App\Controllers\PaymentController;
+	use App\Controllers\BillingController;
+	use App\Controllers\ServiceController;
+	use App\Controllers\RoomServiceController;
+	use App\Controllers\StaffController;
+	use App\Controllers\HousekeepingController;
+	use App\Controllers\FeedbackController;
 	
-	$pdo = (new Database())->getConnection();
-
+	/* Setup DB connection  */
+	$pdo = new PDO('mysql:host=localhost;dbname=hotel_db', 'root', '');
+	
+	/* Instantiate Controllers */
+	$guestController = new GuestController($pdo);
+	$roomController = new RoomController($pdo);
+	$roomTypeController = new RoomTypeConroller($pdo);
 	$reservationController = new ReservationController($pdo);
-	$paymentController = new PaymentController($pdo);
 	
-	$uri = $_SERVER['REQUEST_URI'];
-	$method = $_SERVER['REQUEST_METHOD'];
+	/* Autoload or manual requires for controllers */
+	require_once '../app/controllers/GuestController.php';
+	require_once '../app/controllers/RoomController.php';
+	require_once '../app/controllers/RoomTypeController.php';
+	require_once '../app/controllers/ReservationController.php';
 	
-	switch ($method) {
-		case 'GET':
-			if (preg_match('/^\/api\/payments\/reservation\/(\d+)$/', $uri, $matches)) {
-				$controller->byReservation((int) $matches[1]);
-			} elseif (preg_match('/^\/api\/payments\/(\d+)$/', $uri, $matches)) {
-				$controller->show((int) $matches[1]);
-			} else {
-				$controller->index();
-			}
-			break; 
-		case 'POST':
-			$data = json_decode(file_get_contents('php://input'), true);
-			$controller->store($data);
-			break;
-			
-		case 'PUT':
-			if (preg_match('/^\/api\/payments\/(\d+)$/', $uri, $matches)) {
-				$controller->destroy((int) $matches[1]);
-			}
-			break;
-		
-		case 'DELETE':
-			if (preg_match('/^\/api\/payments\/(\d+)$/', $uri, $matches)) {
-				$controller->destro((int) $matches[1]);
-			}
-			break;
-			
-		default:
-			http_response_code(405);
-			echo json_encode(['error' => 'Method Not Allowed']);
-			break;
-	}
+	/* Guest Routes */
+	
+	$router::get('/api/guests', [$guestController, 'index']);
+	$router::get('/api/guests/{id}', [$guestController,'show']);
+	$router::post('/api/guests', [$guestController, 'store']);
+	$router::put('/api/guests/{id}', [$guestController, 'update']);
+	$router::delete('/api/guests/{id}', [$guestController, 'destroy']);
+	
+	/* Room Routes */
+	$router::get('/api/rooms', [$roomController,'index']);
+	$router::get('/api/rooms/{id}', [$roomController, 'show']);
+	$router::post['/api/rooms', [$roomController, 'store']);
+	$router::put('/api/rooms/{id}', [$roomController, 'update']);
+	$router::delete('/api/rooms/{id}', [$roomController,'destroy']);
+	
+	/* Room Type Routes */
+	$router::get('/api/room-types', [$roomTypeController::class, 'index']);
+	$router::get('/api/room-types/{id}', [$roomTypeController::class,'show']);
+	$router::post('/api/room-types', [$roomTypeController::class,'store']);
+	$router::put('/api/room-types', [$roomTypeController,'update']);
+	$router::delete('/api/room-types/{id}', [$roomTypeController,'destroy']);
+	
+	/* Reservation Routes */
+	$router::get('/api/reservation', [$eservationController::class, 'index']);
+	$router::get('/api/reservations/{id}', [$reservationController::class, 'show']);
+	$router::post('/api/reservations', [$reservationController::class, 'store']);
+	$router::put('/api/reservations/{id}', [$reservationController::class, 'update']);
+	$router::delete('/api/reservations/{id}', [$reservationController::class, 'destroy']);
 	
 	
-	$method = $_SERVER['REQUEST_METHOD'];
-	$uri = explode('/', trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/'));
-	$input = json_decode(file_get_contents("php://input"), true);
 	
-	if ($url[0] !== 'guests') {
-		http_response_code(404);
-		echo json_encode(['error' => 'Invalid endpoint']);
-		exit;
-	}
+	/* Payment Routes */
+	$router::get('/api/payments/{id}', [PaymentController::class, 'show']);
+	$router::post('/api/payments', [PaymentController::class, 'store']);
+	$router::
 	
-	switch ($method) {
-		case 'GET': 
-			isset($url[1]) ? $controller->show(int)$uri[1]): $controller->index();
-			break;
-			
-		case 'POST':
-			$controller->store($input);
-			break;
-			
-		case 'PUT':
-			$controller->update($input);
-			break;
-			
-		case 'DELETE':
-			isset($uri[1]) ? $controller->destroy((int)$uri[1]): http_response_code(400);
-			break;
-			
-		default:
-			http_response_code(405);
-			echo json_encode(['error' => 'Method Not Allowed']);
-		}
-		
+	/*  billing Routes*/
+	$router->get('/api/billings/{reservationId}', [BillingController::class, 'generate']);
+	$router->post['/api/billings', [BillingController::class, 'store']);
 	
+	/* Service Routes */
+	$router->get('/api/services', [ServiceController::class, 'index']);
+	$router->post('/api/services', [ServiceController::class, 'store']);
+	
+	/* Room Services Routes */
+	$router->post('/api/room_services', [RoomServiceController::class, 'store']);
+	$router->get('/api/room_services/{roomID}', [RoomServiceController::class, 'getByRoom']);
+	
+	/* Staff Routes */
+	$router->get('/api/staff', [StaffController::class, 'index']);
+	$router->get('/api/staffs/{id}', [StaffController::class, 'show']);
+	$router->post('api/staffs', [StaffController::class,' store']);
+	$router->put('/api/staffs/{id}', [StaffController::class, 'update']);
+	$router->delete('/api/staffs/{id}', [StaffController::class, 'destroy']);
+	
+	/* Housekeeping Routes */
+	$router->get('api/housekeeping', [HousekeepingController::class,'index']);
+	$router->post('/api/housekeeping', [HousekeepingController::class,'assign']);
+	
+	/* Feedback Routes */
+	$router->post('/api/feedbacks', [FeedbackController::class,'store']);
+	$router->get('/api/feedbacks', [FeedbackController::class,' index']);
+	
+	/* Auth Routes */
+	$router->post('/api/login', 'App\\Auth\\Login::handle'0;
+	$router->post('/api/register', 'App\\Auth\\register::handle'0;
+	$router->post('api/reset-password', 'App\\Auth\\resetPassword::handle');
+	
+	return $router;
 	
