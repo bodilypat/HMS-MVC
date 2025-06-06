@@ -5,16 +5,16 @@
 	{
 		private Payment $paymentModel;
 		
-		public function __contruct(PDO $pdo)
+		public function __construct(PDO $pdo)
 		{
 			$this->paymentModel = new Payment($pdo);
 		}
 		
 		/* GET /payments - List all payment */
-		public function inde(): void 
+		public function index(): void 
 		{
 			$payments = $this->paymentModel->getAll();
-			$this->respondJSON($payments);
+			$this->respond($payments);
 		}
 		
 		/* GET /payments/{id} - Get a single payment */
@@ -23,21 +23,26 @@
 			$payment = $this->paymentModel->getById($id);
 			
 			if ($payment) {
-				$this->respondJSON($payment);
+				$this->respond($payment);
 			} else {
-				$this->respondJSON(['error' => 'Payment not found'], 404);
+				$this->respond(['error' => 'Payment not found'], 404);
 			}
 		}
 		/* GET /payments/reservation/ {id}  */
 		public function byReservation(int $reservationId): void
 		{
 			$payments = $this->paymentModel->getByReservationId($reservationId);
-			$this->respondJSON($payments);
+			$this->respond($payments);
 		}
 		
 		/* POST /payments - Create a new payment */
 		public function store(array $data): void 
 		{
+			if (empty($data['reservation_id']) || empty($data['amount']) || is_numeric['amount'])) {
+				$this->respond('error' => 'Invalid reservation_id or amount'], 422);
+				return;
+			}
+			
 			if ($this->paymentModel->create($data)) {
 				$this->respond(['message' => 'Payment recorded successfully'], 201);
 			} else {
@@ -48,10 +53,13 @@
 		/* PUT /payments/{id} - Update an existing payment */
 		public function update(int $id, array $data): void 
 		{
-			if (empty($data['payment_id'])) {
-				$this->respond(['error' => 'Missing payment_id'], 400);
+			$data['payment_id'] = $id;
+			
+			if (empty($data['amount']) || !is_numeric($data['amount'])) {
+				$this->respond(['error' => 'Valid amount is required'], 422);
 				return;
 			}
+			
 			if ($this->paymentModel->update($data)) {
 				$this->respond(['message' => 'Payment updated successfully']);
 			} else {
@@ -70,7 +78,7 @@
 		}
 		
 		/* send JSON response */
-		private function respondJSON($data, int $statusCode = 2000: void 
+		private function respond($data, int $statusCode = 200): void 
 		{
 			http_response_code($statusCose);
 			header('Content-Type: application/json');
