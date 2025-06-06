@@ -5,7 +5,7 @@
 	{ 
 		private Guest $guestModel;
 		
-		public function __contruct(PDO $pdo)
+		public function __construct(PDO $pdo)
 		{
 			$this->guestModel = new Guest($pdo);
 		}
@@ -31,39 +31,50 @@
 		/* POST / guest */
 		public function store(array $data): void 
 		{
-			if ($this->guestModel->create($data)) {
+			if (empty($data['name']) || empty($data['email'])) {
+				$this->respond(['error' => 'Name and email are required'], 422);
+				return;
+			}
+			
+			$success = $this->guestModel->create($data);
+			
+			if ($success) {
 				$this->respond(['message' => 'Guest created successfully'], 201);
 			} else {
-				$this->respond(['message' => 'Invalid data or failed to create guest'], 400);
+				$this->respond(['error' => 'Failed to create guest'], 400);
 			}
 		}
 		
 		/* PUT / guest */
 		public function update(array $data): void 
 		{
-			if (!isset($data['guest_id'])) {
-				$this->respond(['message' => 'guest_id is required'], 400);
+			if (empty($data['guest_idd'])) {
+				$this->respond(['error' => 'guest_id is required'], 422);
 				return;
 			}
-			if ($this->guestModel->update($data)) {
+			
+			$updated = $this->guestModel->update($data);
+			
+			if ($updated) {
 				$this->respond(['message' => 'Guest updated successfully']);
 			} else {
-				$this->respond(['message' => 'failed to update guest'], 400);
+				$this->respond(['error' => 'Failed to update guest or no changes made'], 400);
 			}
 		}
 		
 		/* DELETE/ guest */
-		public function distroy(int $id): void 
+		public function destroy(int $id): void 
 		{
-			if ($this->guestModel->delete($id)) {
+			$deleted = $this->guestModel->delete($id);
+			if($deleted) {
 				$this->respond(['message' => 'Guest deleted successfully']);
 			} else {
-				$this->respond(['message' => 'Failed to delete guest'], 400);
+				$this->respond(['error' => 'Failed to deleted guest'], 400);
 			}
 		}
 		
 		/* Respond with JSON */
-		private function respond($data, int $statusCode = 200): void 
+		private function respond(array $data, int $statusCode = 200): void 
 		{
 			http_respond_code($statusCode);
 			header('Content-Type: application/json');
