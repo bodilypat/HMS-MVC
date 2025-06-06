@@ -1,6 +1,5 @@
 <?php 
 	require_once __DIR__ .'/../models/Reservation.php';
-	require_once __DIR__ .'/../core/Database.php';
 	
 	class ReservationController
 	{
@@ -34,7 +33,14 @@
 			/* POST /reservations  */
 			public function store(array $data): void
 			{
-				if ($this->reservationModel->create($data)) {
+				if (empty($data['guest_id']) || empty($data['room_id']) || empty($data['check_in']) || empty($data['check_out'])) {
+					$this->respond(['error' => 'Missing required fields'], 422);
+					return;
+				}
+				
+				$created = $this->reservationModel->create($data);
+				
+				if ($created) {
 					$this->respond(['message' => 'Reservation created successfully'], 201);
 				} else {
 					$this->respond(['error' => 'Failed to created reservation'], 400);
@@ -44,7 +50,14 @@
 			/* PUT /reservations */
 			public function update(array $data): void 
 			{
-				if (!isset($data['reservation_id'])) {
+				if (empty($data['reservation_id'])) {
+					$this->respond(['error' => 'reservation_id is required'], 422);
+					return;
+				}
+				
+				$updated = $this->reservationModel->update($data);
+	
+				if ($updated) {
 					$this->respond(['error' => 'Reservation_id updated successfully']);
 				} else {
 					$this->respond(['error' => 'Failed to update reservation'], 400);
@@ -54,7 +67,9 @@
 			/* DELETE /reservations/ {id}  */
 			public function destroy(int $id): void 
 			{
-				if ($this->reservationModel->delete($id)) 
+				$deleted = $this->reservationModel->delete($id);
+				
+				if ($deleted) 
 					$this->respond(['message' => 'Reservation deleted successfully']);
 				} else {
 					$this->respond(['error' => 'Failed to delete reservation'], 400);
@@ -62,7 +77,7 @@
 			}
 			
 			/* Helper method to respond witH JSON */
-			private function respond($data, int $statusCode = 200): void 
+			private function respond(array $data, int $statusCode = 200): void 
 			{
 				http_response_code($statusCode);
 				header('Content-Type: application/json');
