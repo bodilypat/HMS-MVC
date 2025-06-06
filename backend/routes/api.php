@@ -43,11 +43,11 @@
 	$router::delete('/api/rooms/{id}', [$roomController,'destroy']);
 	
 	/* Room Type Routes */
-	$router::get('/api/room-types', [$roomTypeController::class, 'index']);
-	$router::get('/api/room-types/{id}', [$roomTypeController::class,'show']);
-	$router::post('/api/room-types', [$roomTypeController::class,'store']);
-	$router::put('/api/room-types', [$roomTypeController,'update']);
-	$router::delete('/api/room-types/{id}', [$roomTypeController,'destroy']);
+	$router::get('/api/room_types', [$roomTypeController::class, 'index']);
+	$router::get('/api/room_types/{id}', [$roomTypeController::class,'show']);
+	$router::post('/api/room_types', [$roomTypeController::class,'store']);
+	$router::put('/api/room_types', [$roomTypeController,'update']);
+	$router::delete('/api/room_types/{id}', [$roomTypeController,'destroy']);
 	
 	/* Reservation Routes */
 	$router::get('/api/reservation', [$eservationController::class, 'index']);
