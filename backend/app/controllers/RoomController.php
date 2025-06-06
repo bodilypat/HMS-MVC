@@ -1,6 +1,5 @@
 <?php
 	require_once __DIR__ .'/../models/Room.php';
-	require_once __DIR__ .'/../core/Database.php';
 	
 	class RoomController 
 	{
@@ -39,6 +38,11 @@
 	    */
 		public function store(array $data): void 
 		{
+			if (empty($data['room_number']) || empty($data['room_type_id'])) {
+				$this->respond(['error' => 'room_number and room_type_id are required.'], 422);
+				return;
+			}
+			
 			if ($this->roomModel->create($data)) {
 				$this->respond(['message'=> 'Room created successfully.'], 201);
 			} else {
@@ -52,7 +56,7 @@
 		public function update(array $data): void 
 		{
 			if (empty($data['room_id'])) {
-				$this->respond(['room' => 'room_id is required.'], 400);
+				$this->respond(['room' => 'room_id is required.'], 422);
 				return;
 			}
 			
