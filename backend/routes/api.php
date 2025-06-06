@@ -1,9 +1,9 @@
 <?php	
 	use Core\Router;
 	use App\Controllers\GuestController;
+	use App\Controllers\RoomController;
 	use App\Controllers\ReservationController;
 	use App\Controllers\RoomTypeController;
-	use App\Controllers\RoomController;
 	use App\Controllers\PaymentController;
 	use App\Controllers\BillingController;
 	use App\Controllers\ServiceController;
@@ -31,6 +31,13 @@
 	$router->put('/api/guests/{id}', [GuestController::class,'update']);
 	$router->delete('/api/guests/{id}', [GuestController::Class,'destroy']);
 	
+	/* Room Routes */
+	$router->get('/api/rooms', [RoomController::class,'index']);
+	$router->get('/api/rooms/{id}', [RoomController::class, 'show']);
+	$router->post['/api/rooms', [RoomController::class, 'store']);
+	$router->put('/api/rooms/{id}', [RoomController::class, 'update']);
+	$router->delete('/api/rooms/{id}', [RoomController::class,'destroy']);
+	
 	/* Reservation Routes */
 	$router->get('/api/reservation', [ReservationController::class, 'index']);
 	$router->get('/api/reservations/{id}', [ReservationController::class, 'show']);
@@ -42,12 +49,7 @@
 	$router->get('/api/room_types', [RoomTypeController::class, 'index']);
 	$router->get('/api/room_types', [RoomTypeController,'store']);
 	
-	/* Room Routes */
-	$router->get('/api/rooms', [RoomController::class,'index']);
-	$router->get('/api/rooms/{id}', [RoomController::class, 'show']);
-	$router->post['/api/rooms', [RoomController::class, 'store']);
-	$router->put('/api/rooms/{id}', [RoomController::class, 'update']);
-	$router->delete('/api/rooms/{id}', [RoomController::class,'destroy']);
+	
 	
 	
 	
