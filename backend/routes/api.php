@@ -120,8 +120,11 @@
 	
 	
 	/* Feedback Routes */
-	$router->post('/api/feedbacks', [$feedbackController::class,'store']);
-	$router->get('/api/feedbacks', [$feedbackController::class,' index']);
+	$router->get('/api/feedbacks', [$feedbackController,'index']);
+	$router->get('/api/feedbacks/{id}', [$feedbackController,' show']);
+	$router->get('/api/feedbacks/reservation/{reservationId}', [$feedbackController, 'byReservation']);
+	$router->post('/api/feedbacks', [$feedbackController, 'store']);
+	$router->delete('/api/feedback/{id}', [$feedbackController, 'destroy']);
 	
 	/* Auth Routes */
 	$router->post('/api/login', ['App\\Auth\\Login','handle']);
