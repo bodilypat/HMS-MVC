@@ -14,7 +14,7 @@
 		public function index(): void
 		{
 			$data = $this->roomService->getAll();
-			$this->response($data);
+			$this->respond($data);
 		}
 		
 		/* GET /room-services/{$id} */
@@ -47,7 +47,7 @@
 		public function update(int $id, array $request): void 
 		{
 			if ($this->roomService->update($id, $request)) {
-				$this->respond('message' => 'Room service updated successfully']);
+				$this->respond(['message' => 'Room service updated successfully']);
 			} else {
 				$this->respond(['error' => 'Failed to update room service'], 400);
 			}
