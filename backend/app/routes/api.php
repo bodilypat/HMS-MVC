@@ -1,17 +1,19 @@
 <?php	
 
 	use Core\Router;
-	use App\Controllers\GuestController;
-	use App\Controllers\RoomController;
-	use App\Controllers\RoomTypeController;
-	use App\Controllers\ReservationController;
-	use App\Controllers\PaymentController;
-	use App\Controllers\BillingController;
-	use App\Controllers\ServiceController;
-	use App\Controllers\RoomServiceController;
-	use App\Controllers\StaffController;
-	use App\Controllers\HousekeepingController;
-	use App\Controllers\FeedbackController;
+	use App\Controllers\ {
+		GuestController;
+		RoomController;
+		RoomTypeController;
+		ReservationController;
+		PaymentController;
+		BillingController;
+		ServiceController;
+		RoomServiceController;
+		StaffController;
+		HousekeepingController;
+		FeedbackController;
+	};
 	
 	/* Autoload or manual requires for controllers */
 	require_once '../app/controllers/GuestController.php';
@@ -19,10 +21,15 @@
 	require_once '../app/controllers/RoomTypeController.php';
 	require_once '../app/controllers/ReservationController.php';
 	require_once '../app/controllers/PaymentController.php';
+	require_once '../app/controllers/BillingController.php';
 	require_once '../app/controllers/ServiceController.php';
 	require_once '../app/controllers/RoomServiceController.php';
+	require_once '../app/controllers/StaffController.php';
+	require_once '../app/controllers/HousekeepingController.php';
+	require_once '../app/controllers/FeedbackController.php';
 	
 	/* Setup DB connection  */
+	$router = new Router();
 	$pdo = new PDO('mysql:host=localhost;dbname=hotel_db', 'root', '');
 	
 	/* Instantiate Controllers */
@@ -31,8 +38,12 @@
 	$roomTypeController = new RoomTypeConroller($pdo);
 	$reservationController = new ReservationController($pdo);
 	$paymentController = new PaymentController($pdo);
+	$billingController = new BillingController($pdo);
 	$serviceController = new ServiceController($pdo);
 	$roomServiceController = new RoomServiceController($pdo);
+	$staffController = new StaffController($pdo);
+	$housekeepingController = new HousekeepingController($pdo);
+	$feedbackController = new FeedbackController($pdo);
 	
 	/* Guest Routes */
 	
@@ -72,8 +83,8 @@
 	$routes->delete('/api/payments/{id}', [$paymentController, 'destroy']);
 	
 	/*  billing Routes*/
-	$router->get('/api/billings/{reservationId}', [BillingController::class, 'generate']);
-	$router->post['/api/billings', [BillingController::class, 'store']);
+	$router->get('/api/billings/{reservationId}', [$billingController::class, 'generate']);
+	$router->post['/api/billings', [$billingController::class, 'store']);
 	
 	/* Service Routes */
 	$router->get('/api/services', [$serviceController, 'index']);
@@ -91,24 +102,24 @@
 	$router->delete('/api/room_services/{id}', [$roomServiceController, 'destroy']);
 	
 	/* Staff Routes */
-	$router->get('/api/staff', [StaffController::class, 'index']);
-	$router->get('/api/staffs/{id}', [StaffController::class, 'show']);
-	$router->post('api/staffs', [StaffController::class,' store']);
-	$router->put('/api/staffs/{id}', [StaffController::class, 'update']);
-	$router->delete('/api/staffs/{id}', [StaffController::class, 'destroy']);
+	$router->get('/api/staff', [$staffController::class, 'index']);
+	$router->get('/api/staffs/{id}', [$staffController::class, 'show']);
+	$router->post('api/staffs', [$staffController::class,' store']);
+	$router->put('/api/staffs/{id}', [$staffController::class, 'update']);
+	$router->delete('/api/staffs/{id}', [$staffController::class, 'destroy']);
 	
 	/* Housekeeping Routes */
-	$router->get('api/housekeeping', [HousekeepingController::class,'index']);
-	$router->post('/api/housekeeping', [HousekeepingController::class,'assign']);
+	$router->get('api/housekeeping', [$housekeepingController::class,'index']);
+	$router->post('/api/housekeeping', [$housekeepingController::class,'assign']);
 	
 	/* Feedback Routes */
-	$router->post('/api/feedbacks', [FeedbackController::class,'store']);
-	$router->get('/api/feedbacks', [FeedbackController::class,' index']);
+	$router->post('/api/feedbacks', [$feedbackController::class,'store']);
+	$router->get('/api/feedbacks', [$feedbackController::class,' index']);
 	
 	/* Auth Routes */
-	$router->post('/api/login', 'App\\Auth\\Login::handle'0;
-	$router->post('/api/register', 'App\\Auth\\register::handle'0;
-	$router->post('api/reset-password', 'App\\Auth\\resetPassword::handle');
+	$router->post('/api/login', ['App\\Auth\\Login','handle']);
+	$router->post('/api/register', ['App\\Auth\\Register','handle']);
+	$router->post('/api/reset-password', ['App\\Auth\\RsetPassword','handle']);
 	
 	return $router;
 	
