@@ -1,97 +1,77 @@
 <?php
-	require_once 'Staff.php'; // include the staff model
-	require_once 'dbconnect';
+
+	require_once __DIR__ . '/../models/Staff.php';
 	
 	class StaffController
 	{
-		private Staff $staff;
-		public function __construct(PDO $pdo)
+		private Staff $staffModel;
+		
+		public function __construct(PDO $pdo) 
 		{
-			$this->staff = new Staff($pdo);
+			$this->staffModel = new Staff($pdo);
 		}
 		
-		public function handleRequest()
+		/* GET /staff - list all staff */
+		public function index(): void 
 		{
-			$method = $_SERVER['REQUEST_METHOD'];
-			$path = $_GET['action'] ?? '';
-			
-			header('Content-Type: application/json');
-			
-			switch ($method) {
-				case 'GET':
-					if (empty($_GET['id'])) {
-						$this->getStaffById((int) $_GET['id']);
-					} else {
-						$this->getAllStaff();
-					}
-					break;
-				case 'POST':
-					$this->createStaff();
-					break;
-				case 'PUT':
-				case 'PATCH': 
-					$this->deleteStaff();
-					break;
-				case 'DELETE':
-					$this->deleteStaff();
-					break;
-				default:
-					http_response_code(405);
-					echo json_encode(['error' => 'Method Not Allowed']);
-					break;
-				}
-		}
-		private function getAllStaff()
-		{
-			$staff = $this->staff->getAll();
-			echo json_encode($staff);
+			$staff = $this->staffModel->getAll();
+			$this->respond($staff);;
 		}
 		
-		private function getStaffById(int $id) 
+		/* GET /staff/{id} - Get a specific staff member */
+		public function show(int id): void
 		{
-			$staff = $this->staff->getById($id);
+			$staff = $this->staffModel->getById($id);
+			
 			if ($staff) {
-				echo json_encode($staff);
+				$this->respond($staff);
 			} else {
-				http_response_code(404);
-				echo json_encode(['error' => 'Staff not found']);
-			}
-		}
-		private function createStaff()
-		{
-			$data = json_decode(file_get_contents('php://input'), true);
-			if ($this->staff->create($data)) {
-				http_response_code(201);
-				echo json_encode(['message' => 'Staff created successfully']);
-			} else {
-				http_response_code(400);
-				echo json_encode(['error' => 'Invalid staff data']);
+				$this->respond(['error' => 'Staff member not found.'], 404);
 			}
 		}
 		
-		private function updateStaff() 
+		/* POST /staff - Create a new staff member */
+		public function store(array $data): void 
 		{
-			$data = json_decode(file_get_contents('php://input'), true);
-			if ($this->staff->update($data)) {
-				echo json_encode(['message' => 'Staff updated successfully']);
+			if ($this->staffModel->create($data)) {
+				$this->respond(['message' => 'Staff member created successfully.'], 201);
 			} else {
-				http_response_code(400);
-				echo json_encode(['error' => 'Invalid staff data or missing ID']);
+				$this->respond(['error' => 'Failed to create staff member'], 400);
 			}
 		}
 		
-		private function deleteStaff()
+		/* PUT /staff - Update a staff member */
+		public function update(array $data): void 
 		{
-			parse_str(file_get_contents('php://input'), $input);
-			$id = isset($input['id']) ? (int) $inpt['id'] : 0;
+			if (empty($data['staff_id'])) {
+				$this->respond(['error' => 'staff_id is required.'], 400);
+				return;
+			}
 			
-			if ($id > 0 && $this->staff->delete($id) {
-				echo json_encode(['message' => 'Staff deleted successfully']);;
+			if ($this->staffModel->update($data)) {
+				$this->respond(['message' => 'Staff updated successfully.']);
 			} else {
-				http_response_code(400);
-				echo json_encode(['error' => 'Invalid or missing ID']);
+				$this->respond(['error' => 'Failed to update staff number.'], 400);
 			}
+		}
+		
+		/* DELETE /staff{id} - Delete a staff member */
+		public function destroy(int $id): void 
+		{
+			if ($this->staffModel->delete($id)) {
+				$this->respond(['message' => 'Staff member deleted successfully.']);
+			} else {
+				$this->respond(['error' => 'Failed to delete staff member.'], 400);
+			}
+		}
+		
+		/* Send a JSON response */
+		private function respond(array $data, int $statusCode = 200): void 
+		{
+			http_response_code($statusCode);
+			header('content-Type: application/json');
+			echo json_encode($data);
 		}
 	}
 	
-			
+	
