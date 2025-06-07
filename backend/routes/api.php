@@ -28,6 +28,11 @@
 	require_once '../app/controllers/HousekeepingController.php';
 	require_once '../app/controllers/FeedbackController.php';
 	
+	/* Auth handler */
+	require_once '../app/auth/Login.php';
+	require_once '../app/auth/Register.php';
+	require_once '../app/auth/ResetPassword.php';
+	
 	/* Setup DB connection  */
 	$router = new Router();
 	$pdo = new PDO('mysql:host=localhost;dbname=hotel_db', 'root', '');
@@ -83,8 +88,8 @@
 	$routes->delete('/api/payments/{id}', [$paymentController, 'destroy']);
 	
 	/*  billing Routes*/
-	$router->get('/api/billings/{reservationId}', [$billingController::class, 'generate']);
-	$router->post['/api/billings', [$billingController::class, 'store']);
+	$router->get('/api/billings/{reservationId}', [$billingController, 'generate']);
+	$router->post['/api/billings', [$billingController, 'store']);
 	
 	/* Service Routes */
 	$router->get('/api/services', [$serviceController, 'index']);
@@ -127,9 +132,19 @@
 	$router->delete('/api/feedback/{id}', [$feedbackController, 'destroy']);
 	
 	/* Auth Routes */
-	$router->post('/api/login', ['App\\Auth\\Login','handle']);
-	$router->post('/api/register', ['App\\Auth\\Register','handle']);
-	$router->post('/api/reset-password', ['App\\Auth\\RsetPassword','handle']);
+	$router->post('/api/login', function() use ($pdo) {
+		$login = new \App\Auth\Login($pdo);
+		$login->handle();
+	});
+	
+	$router->post('/api/register', function () use ($pdo) {
+		$register = new \App\Auth\Register($pdo)
+		$register->handle()
+	});
+	$router->post('/api/reset-password', function () use ($pdo) {
+		$reset = new \App\Auth\ResetPassword($pdo);
+		$reset->handle();
+	});
 	
 	return $router;
 	
