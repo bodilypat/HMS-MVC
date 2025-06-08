@@ -1,38 +1,75 @@
 <?php
 	
-	session_start();
-	require_once __DIR__ . '/../config/dbConnect.php';
+	namespace Core;
 	
-	if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-		/* Sanitize input  */
-		$usernameOrEmail = trim($_POST['username'] ?? '');
-		$password = $_POST['password'] ?? '';
+	class Auth 
+	{
+		public static function startSession(): void 
+		{
+			if (session_status() === PHP_SESSION_NONE) {
+				session_start();
+			}
+		}
 		
-		if (empty($usernameOrEmail) || empty($password)) {
-			$error = 'Username/email and password are required.';
-		} else {
-			/* Prepare and execute query securely */
-			$stmt = $db_con->prepare("SELECT user_id, username, email, password_hash, role FROM users WHERE username = ? OR email = ? ");
-			$stmt->bind_param("ss", $usernameOrEmail, $usernameOrEmail);
-			$stmt->execute();
-			$result = $stmt->get_result();
-			$user = $result->fetch_assoc();
+		public static function login(array $user): void 
+		{
+			self::startSession();
+			$_SESSION['user-id'] = $user['user_id'];
+			$_SESSION['username'] = $user['username'];
+			$_SESSION['role'] = $user['role'] ??  'guest';
+		}
+		 
+		public static function logout(): bool 
+		{
+			self::startSession();
+			$_SESSION = [];
+			session_destroy();
+		}
+		
+		public static function check(): bools
+		{
+			self::startSession();
+			return isset($_SESSION['user_id']);
+		}
+		
+		public static function user(): ?array
+		{
+			self::startSession();
 			
-			if ($user && password_verify($password, $user['password_hash'])) 
-			{
-				/* Regenerate session ID for security */
-				session_regenerate_id(true);
-				
-				/* Store session data */
-				$_SESSION['user_id'] = $user['user_id'];
-				$_SESSION['username'] = $user['username'];
-				$_SESSION['role'] = $user['role'];
-				
-				header('Location: /frontent/pages/dashboard.html');
+			if (self::check()) {
+				return [
+					'user_id' => $_SESSION['user_d'],
+					'username' => $_SESSION['username'],
+					'role' => $_SESSION['role'],
+				];
+			}
+			return null;
+		}
+		
+		public static function isAdmin(): bool
+		{
+			self::startSession();
+			return isset($_SESSION['role']) && $_SESSION['role'] === 'admin';
+		}
+		
+		public static function requireLogin(): void 
+		{
+			if (!self::check()) {
+				http_response_code(401);
+				echo json_encode(['error' => 'Authentication required']);
 				exit();
-			} else {
-				$error = 'Invalid username/email or password.';
+			}
+		}
+		public static function requireAdmin(): void 
+		{
+			if (!self::isAdmin()) {
+				http_response_code(403);
+				echo json_encode(['error' => 'Admin access required']);
+				exit();
 			}
 		}
 	}
 	
+		
+			
+			
