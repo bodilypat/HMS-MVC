@@ -26,7 +26,7 @@
 			$email = trim($data['email'] ?? '');
 			$newPassword = $data['new_password'] ?? '';
 			
-			/* Basic validation */
+			/* Validation */
 			if (!$email || !$newPasswordf) {
 				$this->respond(['error' => 'Email and new password are required'], 422);
 				return;
@@ -36,6 +36,12 @@
 				$this->respond(['error' => 'Invalid email format'], 422);
 				return;
 			}
+			
+			if (strlen($newPassword) < 6 ) {
+				$this->respond(['error' => 'Password must be at least 6 characters long'], 422);
+				return;
+			}
+			
 			try {
 				/* Check if the email exists */
 				$stmt = $this->pdo->prepare("SELECT user_id FROM users WHERE email = :email LIMIT 1");
@@ -45,19 +51,17 @@
 				if (!$user) {
 					$this->respond(['error' => 'Email not found'], 404);
 					return;
-				}
-				
+				}	
 				/* Update password */
 				$passwordHash = password_hash($newPassword, PASSWORD_BCRYPT);
 				$update = $this->pdo->prepare("UPDATE users SET password_hash = :password WHERE email = :email");
 				$update->execute([
 					'password' => $passwordHash,
-					'email' => $emai
-					]);
-					
-					$this->respond(['message' => 'Password reset successfuly']);
+					'email' => $emaill
+				]);					
+				$this->respond(['message' => 'Password reset successfuly']);
 			} catch (Exception $e) {
-				$this->respond(['error' => 'Password reset failed', 'details' => $e->getMessage()], 500);
+				$this->respond(['error' => 'Password reset failed'], 500);
 			}
 		}
 		
@@ -66,6 +70,7 @@
 			http_response_code($status);
 			header('Content-type: application/json');
 			echo json_encode($data);
+			exit;
 		}
 	}
 	
