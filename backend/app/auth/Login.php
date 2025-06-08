@@ -3,6 +3,7 @@
 	namespace App\Auth;
 	
 	use PDO;
+	
 	class Login 
 	{
 		private PDO $pdo;
@@ -10,6 +11,7 @@
 		public function __construct(PDO $pdo) 
 		{
 			$this->pdo = $pdo;
+			
 			if(session_status() === PHP_SESSION_NONE) {
 				session_start();
 			}
@@ -19,6 +21,7 @@
 		public function handle(): void 
 		{
 			/* Accept only POST */
+			
 			if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 				$this->respond(['error' => 'Invalid request method'], 405);
 				return;
@@ -26,6 +29,7 @@
 			
 			/* Input validation */
 			$input = json_decode(file_get_contents("php://input"), true);
+			
 			$usernameOrEmail = trim($input['username'] ?? '');
 			$password = $input['password'] ?? '';
 			
@@ -37,7 +41,10 @@
 			/* Fetch user */
 			$stmt = $this->pdo->prepare("SELECT user_id, username, email, password_hash
 			                             FROM users
-										 WHERE username = :input OR email = :input LIMIT 1 ");
+										 WHERE username = :input OR email = :input 
+										 LIMIT 1 
+									");
+									
 			$stmt->execute(['input' => $usernameOrEmail]);
 			$user = $stmt->fetch(PDO::FETCH_ASSOC);
 			
@@ -47,7 +54,7 @@
 				
 				$_SESSION['user_id'] = $user['user_id'];
 				$_SESSION['username'] = $user['username'];
-				$_SESSION['role'] = $user['role'];
+				$_SESSION['role'] = $user['role'] ?? 'guest';
 				
 				$this->respond([
 					'message' => 'Login successful',
@@ -68,6 +75,7 @@
 			http_response_code($status);
 			header('Content-Type: application/json');
 			echo json_encode($data);
+			exit;
 		}
 	}
 	
