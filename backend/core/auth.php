@@ -14,6 +14,7 @@
 		public static function login(array $user): void 
 		{
 			self::startSession();
+			session_regenerate_id(true) // Prevent session fixation
 			$_SESSION['user-id'] = $user['user_id'];
 			$_SESSION['username'] = $user['username'];
 			$_SESSION['role'] = $user['role'] ??  'guest';
@@ -23,13 +24,28 @@
 		{
 			self::startSession();
 			$_SESSION = [];
-			session_destroy();
+			
+			if (int_get("session.use_cookies")) {
+				$params = session_get_cookie_params();
+					setcookie(
+						session_name(),
+						'',
+						time() - 42000,
+						$param["path"],
+						$param["domain"],
+						$params["secure"],
+						$param["httponly"]
+					);
+			}
+			return session_destroy();
 		}
 		
-		public static function check(): bools
+		public static function check(): bool
 		{
 			self::startSession();
 			return isset($_SESSION['user_id']);
+			
+			
 		}
 		
 		public static function user(): ?array
@@ -55,18 +71,22 @@
 		public static function requireLogin(): void 
 		{
 			if (!self::check()) {
-				http_response_code(401);
-				echo json_encode(['error' => 'Authentication required']);
-				exit();
+				self::unauthorized('Authentication required');
 			}
 		}
 		public static function requireAdmin(): void 
 		{
 			if (!self::isAdmin()) {
-				http_response_code(403);
-				echo json_encode(['error' => 'Admin access required']);
-				exit();
-			}
+					self::unauthorized('Admin access required', 403);
+				}
+		}
+		
+		private static function unauthorized(string $message, int $code = 401): void 
+		{
+			http_response_code($code);
+			header('Content-Type: application/json');
+			echo json_encode(['error' => $message]);
+			exit();
 		}
 	}
 	
