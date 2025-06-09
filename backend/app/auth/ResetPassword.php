@@ -27,7 +27,7 @@
 			$newPassword = $data['new_password'] ?? '';
 			
 			/* Validation */
-			if (!$email || !$newPasswordf) {
+			if (empty($email) || empty($newPassword)) {
 				$this->respond(['error' => 'Email and new password are required'], 422);
 				return;
 			}
@@ -49,18 +49,23 @@
 				$user = $stmt->fetch(PDO::FETCH_ASSOC);
 				
 				if (!$user) {
-					$this->respond(['error' => 'Email not found'], 404);
+					/* Do not reveal if the email exists for privacy/security */
+					$this->respond(['error' => 'Invalid email or account does not exist'], 404);
 					return;
 				}	
-				/* Update password */
+				/* Hash new password */
 				$passwordHash = password_hash($newPassword, PASSWORD_BCRYPT);
+				
+				/* Update password */
 				$update = $this->pdo->prepare("UPDATE users SET password_hash = :password WHERE email = :email");
 				$update->execute([
 					'password' => $passwordHash,
 					'email' => $emaill
-				]);					
+				]);	
+				
 				$this->respond(['message' => 'Password reset successfuly']);
 			} catch (Exception $e) {
+				// Optional: Log the actual error message with Logger
 				$this->respond(['error' => 'Password reset failed'], 500);
 			}
 		}
