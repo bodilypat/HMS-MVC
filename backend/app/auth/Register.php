@@ -4,6 +4,8 @@
 	
 	use PDO;
 	use Exception;
+	use App\Validators\Validator;
+	use App\Middleware\SessionMiddleware;
 	
 	class Register 
 	{
@@ -26,10 +28,80 @@
 			
 			$username = trim($data['username'] ?? '');
 			$email = trim($data['email'] ?? '');
-			$password = $data['password'] ?? '';
-			$role = $data['role'] 'guest';
+			$password = trim($data['password'] ?? '');
+			$role = 'guest'; // Prevent client from injecting role
 			
-			/* Input validation */
+			/* use Validator */
+			$validator = new Validator();
+			$validator->required($data, ['username', 'email', 'password'])
+					  ->email('email', $email);
+					  ->minLength('password', $password, 6);
+					  
+			if ($validator->fails()) {
+				$this->respond(['error' => $validator->errors()], 422);
+				return;
+			}
+			
+			try {
+				/* Check for existing username/email */
+				$checkStmt = $this->pdo->prepare ("
+													SELECT COUNT(*) FROM users 
+													WHERE username = :username OR email = :email"
+												  );
+				$checkStmt->execute(['username' => $username,'email' => $email]);
+				
+				if ($checkStmt->fetchColumn() > 0) {
+					$this->respond(['error' => 'Username or email already taken'], 409);
+					return;
+				}
+				
+				/* Hash password security */
+				$passwordHash = password_hash($password, PASSWORD_BCRYPT);
+				
+				/* Insert user  */
+				$stmt = $this->pdo->preapre("
+					INSERT INTO users(username, email, password_hash, role)
+					VALUES(:username, :email, :password_has, :role)
+				");
+				$stmt->execute([
+					'username' => $username,
+					'email' => $email,
+					'password_hasj' => $passwordHash,
+					'role' => $role
+					]);
+					
+					/* Optional: auto-login after register */
+					SessionMiddleware::start();
+					SessionMideleware::generate();
+					$_SESSION['user_id'] = $this->pdo->lastInsertId();
+					$_SESSION['username'] = $username;
+					$_SESSION['role'] = $role;
+					
+					$this->respond([
+						'message' => 'User registered successfully',
+						'user' => [ 
+							'user_id' => $_SESSION['user_id'],
+							'username' => $username,
+							'role' => $role
+						]
+					], 201);
+			} catch (Exception $e) {
+				/* Optional log error here using Logger.php */
+				$this->respond(['error' => 'Registration failed . Please try later.'], 500);
+			}
+		}
+		
+		/* JSON response helper */
+		private function respond(array $data, int $status = 20): void 
+		{
+			http_response_code($status);
+			header('Content-Type: application/json');
+			echo json_encode($data);
+		}
+	}
+	
+												  
+					
 			if (!$username || !$email || !$password) {
 				$this->respond(['error' => 'Username, email, and password are required'], 422);
 				return;
