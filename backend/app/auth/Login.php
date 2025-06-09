@@ -3,6 +3,8 @@
 	namespace App\Auth;
 	
 	use PDO;
+	use Exception;
+	use App\Middleware\SessionMiddleware;
 	
 	class Login 
 	{
@@ -11,10 +13,7 @@
 		public function __construct(PDO $pdo) 
 		{
 			$this->pdo = $pdo;
-			
-			if(session_status() === PHP_SESSION_NONE) {
-				session_start();
-			}
+			SessionMiddleware::start(); // Centralized session management
 		}
 		
 		/* Handle Login request, POST /api/Login */
@@ -33,40 +32,44 @@
 			$usernameOrEmail = trim($input['username'] ?? '');
 			$password = $input['password'] ?? '';
 			
-			if (!$usernameOrEmail || $password) {
+			if (empty($usernameOrEmail) || empty($password)) {
 				$this->respond(['error' => 'Username/email and password are required'], 422);
 				return;
 			}
 			
-			/* Fetch user */
-			$stmt = $this->pdo->prepare("SELECT user_id, username, email, password_hash
-			                             FROM users
-										 WHERE username = :input OR email = :input 
-										 LIMIT 1 
-									");
+			try {
+				/* Fetch user by username or email */
+					$stmt = $this->pdo->prepare("SELECT user_id, username, email, password_hash
+												 FROM users
+										         WHERE username = :input OR email = :input 
+										         LIMIT 1 
+											");
 									
-			$stmt->execute(['input' => $usernameOrEmail]);
-			$user = $stmt->fetch(PDO::FETCH_ASSOC);
+					$stmt->execute(['input' => $usernameOrEmail]);
+					$user = $stmt->fetch(PDO::FETCH_ASSOC);
 			
-			/* Verify password */
-			if ($user && password_verify($password, $user['password_hash'])) {
-				session_generate_id(true);
+					/* Verify password */
+					if ($user && password_verify($password, $user['password_hash'])) {
+						session_generate_id(true);
 				
-				$_SESSION['user_id'] = $user['user_id'];
-				$_SESSION['username'] = $user['username'];
-				$_SESSION['role'] = $user['role'] ?? 'guest';
+						$_SESSION['user_id'] = $user['user_id'];
+						$_SESSION['username'] = $user['username'];
+						$_SESSION['role'] = $user['role'] ?? 'guest';
 				
-				$this->respond([
-					'message' => 'Login successful',
-					'user' => [
-						'user_id' => $user['user_id'],
-						'username' => $user['username'],
-						'role' => $user['role']
-					]
-				]);
-			} else {
-				$this->respond(['error' => 'Invalid credentials'], 401);
-			}
+						$this->respond([
+							'message' => 'Login successful',
+							'user' => [
+								'user_id' => $user['user_id'],
+								'username' => $user['username'],
+								'role' => $user['role']
+							]
+						]);
+					} else {
+						$this->respond(['error' => 'Invalid credentials'], 401);
+					}
+				} catch (Exception $e) {
+					$this->respond(['error' => 'Login failed . Please try again later.'] 500);
+				}
 		}
 		
 		/* JSON Response Helper */
