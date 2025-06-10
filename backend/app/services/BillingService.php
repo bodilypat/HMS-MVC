@@ -1,7 +1,7 @@
 <?php
 
 	require_once __DIR__ . '/../models/Billing.php';
-	requird_once __DIR__ . '/../models/Reservation.php';
+	require_once __DIR__ . '/../models/Reservation.php';
 	require_once __DIR__ . '/../models/RoomService.php';
 	require_once __DIR__ . '/../models/Service.php';
 	
@@ -20,31 +20,49 @@
 			$this->serviceModel = new Service($pdo);
 		}
 		
-		/* Generation billing details for a given reservation */
+		/* Generation billing for a given reservation, 
+		   * @ param int $reservation , 
+		   * @return array|null  
+	    */
+		
 		public function generate(int $reservationId): ?array 
 		{
 			$reservation = $this->reservationModel->getById($reservationId);
+			
 			if (!$reservation) return null;
 			
 			/* Caculate room cost */
-			$checkIn = new DateTime($reservation['check_in']);
-			$checkOut = new DateTime($reservation['check_out']);
+			try {
+				$checkIn = new DateTime($reservation['check_in']);
+				$checkOut = new DateTime($reservation['check_out']);
+			} catch (Exception $e) {
+				return null;
+			}
+			
 			$nights = $checkIn->diff($checkOut)->days;
-			$roomRate = (float) $reservation['rate'] ?? 0;
-			$roomCost = $night * roomRate;
+			if ($night <= 0) {
+				$nights = 1; 
+			}
+			
+			$roomRate = isset($reservation['rate']) ? (float) $reservation['rate'] ?? 0;
+			$roomCost = $night * $roomRate;
 			
 			/* Caculate service cost */
 			$roomServices = $this->roomServiceModel->getByReservation($reservationId);
 			$serviceCost = 0;
 			
 			foreach ($roomServices as $rs) {
-				$service = $this->serviceModel->getById($rs['service-id']);
-				if ($service) {
-					$serviceCost += (float) $service['price'];
+				$serviceId = $rs['serviceId'] ?? $rs['service'] ?? null;
+				
+				if ($serviceId) {
+					$service = $this->serviceModel->getById($serviceId);
+					if ($service && isset ($service['price'])) {
+						$serviceCost += (float) $service['price'];
+					}
 				}
 			}
 			
-			/* Total */
+			/* Total billing*/
 			$total = $roomCost + $serviceCost;
 			
 			return [
@@ -56,13 +74,21 @@
 			];
 		}
 		
-		/* Store billing record into DB */
+		/* Store billing record into DB,
+         * @param array $billingData 
+         * @return bool
+	   */
+	   
 		public function store(array $billingData): bool 
 		{
 			return $this->billingModel->create($billingData);
 		}
 		
-		/* Get billing record for a reservation */
+		/* Get billing record for a reservation ID,
+         * @param int $reservationId,
+         * @return array|null 
+		*/
+		
 		public function getByReservation(int $reservatioId): ?array 
 		{
 			return $this->billingModel->getByReservation($reservationId);
