@@ -25,25 +25,41 @@
 				$recipient,
 				$message
 			);
-			
+			/* Attempt to write to log file */
 			return file_put_contents($this->logFile, $logEntry, FILE_APPEND | LOCK_EX) !== false;
 	   }
 	   
-	   /* Stub for sending email */
+	   /* Stub for sending email
+        * @param string $email,
+        * @param string $subject,
+        * @param string $body 
+        * @return bool 
+    	*/
+		
 	   public function sendEmail(string $email, string $subject, string $body): bool 
 	   {
 		   // Extend with real email sending
-		   return $this->send($email, "Subject: $subject\n$body", 'email');
+		   $formatted = "Subject: $subject\nBody: $body";
+		   return $this->send($email, $formatted, 'email');
 	   }
 	   
-	   /* Stub for sending SMS (API integration) */
+	   /* Stub for sending SMS (API integration)
+        * @param string $phone,
+        * @param string $text,
+        * @return 
+        */
+		
 	   public function sendSMS(string $phone, string $text): bool
 	   {
-		   //Extend with real email sending 
-		   return $this->send($email, $text, 'sms');
+		   /* Future: Integrate with real SMS gateway */
+		   return $this->send($phone, $text, 'sms');
 	   }
 	   
-	   /* Internal system alert */
+	   /* Internal system alert
+        * @param string $message
+        * @return bool 
+		*/
+		
 	   public function systemAlert(string $message): bool 
 	   {
 		   return $this->send('SYSTEM', $message,'internal');
