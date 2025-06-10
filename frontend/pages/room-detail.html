@@ -2,38 +2,51 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8" />
-	<meta name="viewport" content="Width-device-width, initial-scale=1.0" />
+	<meta name="viewport" content="width=device-width, intial-scale=0" />
 	<title>Room Details</title>
-	<link rel="stylesheet" href="../styles/main.css">
-	<link rel="stylesheet" href="../styles/room-detail.css">
+	<link rel="stylesheet" href="../styles/main.css" />
+	<link rel="stylesheet" href="../styles/room-detal.css" />
 </head>
-<body>	
+<body>
 	<div class="room-detail-container">
+		<!-- Room Gallery -->
 		<div class="room-gallery">
-			<img id="main-image" src="../assets/images/rooms/default-room.jpg" alt="Room Image" />
+			<img id="main-image" src="../assets/images/rooms/default-room.jpg" alt="Main Room Image" />
 			<div class="thumbnail-list">
-				<img class="thumbnail" src="../assets/images/rooms/default-room.jpg" alt="Thumb">
-				<img class="thumbnail" src="../assets/images/rooms/room1.jpg" alt="Thumb" />
-				<img class="thumbnail" src="../assets/images/rooms/room2.jpg" alt="Thumb" />
+				<img class="thumbnail" src="../assets/images/rooms/default-room.jpg" alt="Room Thumbnail 1" />
+				<img class="thumbnail" src="../assets/images/rooms/room1.jpg" alt="Room Thumbnail 2" />
+				<img class="thumbnail" src="../assets/images/rooms/room2.jpg" alt="Room Thumbnail 3" />
 			</div>
 		</div>
+		<!-- Room Information -->
 		<div class="room-info">
 			<h1 id="room-title">Deluxe Room</h1>
-			<p id="room-description">A deluxe room with </p>
-			
-			<ul class="anenities">
-				<li><strong>Bed:</strong>King Size</li>
-				<li><strong>Max Guests:</strong> 2 Adults</li>
-				<li><strong>Wi-Fi:</strong> Free</li>
-				<li><strong>Breakfast:</strong> Included</li>
-				<li><strong>Air Conditioning:</strong> Yes</li>
+			<p id="room-description">
+				Enjoy your stay in our specious deluxe room featuring elegant interiors , a king-size bed, and full amenities.
+			</p>
+			<ul class="amenities">
+				<li><strong>Bed: </strong>King Size</li>
+				<li><strong>Max Guest: </strong> 2 Adults</li>
+				<li><strong>Wi-Fi: </strong> Free</li>
+				<li><strong>Breakfast: </strong> Include</li>
+				<li><strong>Air Conditioning: </strong> Yes</li>
 			</ul>
-			<p class="price">Price per night: <strong>$150</strong></p>
+			<p class="price">Price per night: </strong> $150</strong></p>
 			<a href="booking.html" class="book-btn">Book This Room</a>
 		</div>
 	</div>
+	<!-- Thumbnail switching script -->
 	<script>
-		
+		document.addEventListener("DOMContentLoaded", function() {
+			const mainImage = document.getElementById('main-image');
+			const thumbnail = document.guerySelectorAll('.thumbnail');
+			
+			thumbnails.forEach(thumb => {
+				thumb.addEventListener('click', () => {
+				mainImage.src = thumb.src;
+			});
+		});
+	});
 	</script>
 </body>
 </html>
