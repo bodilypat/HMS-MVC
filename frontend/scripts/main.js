@@ -1,3 +1,4 @@
+
 /* Frontend/scripts/main.js */
 import { fetchRoom, fetchUser } from './utils/api.js';
 import { renderRoomCards, showNotification } from './utils/dom.js';
