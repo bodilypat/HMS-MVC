@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, intial-scale=1.0 " />
+	<title>Dashboard</title>
+	<link rel="stylesheet" href="../styles/dashboard.css" />
+</head>
+<body>
+	<header class="dashboard-header">
+		<h1>Welcome to Your Dashboard</h1>
+		<p id="user-greeting">Hello, </span id="user-name">Guest</span>!</p>
+	</header>
+	<main class="dashboard-main">
+		<section class="dashboard-cards">
+			<div class="card">
+				<h3>Reservation</h3>
+				<p id="reservation-count">--</p>
+				<a href="reservations.html">View</a>
+			</div>
+			<div class="card">
+				<h3>Services</h3>
+				<p id="service-count">--</p>
+				<a href="services.html">View</a>
+			</div>
+			<div class="card">
+				<h3>Billing</h3>
+				<p id="billing-count">--</p>
+				<a href="billing.html">View</a>
+			</div>
+			<div class="card">
+				<h3>Feedback</h3>
+				<p id="feedback-count">--</p>
+				<a href="feedback.html">Submit</a>
+			</div>
+			<div class="dashboard-actions">
+				<h2>Quick Action</h2>
+				<div class="action-buttons">
+					<a href="booking.html" class="btn">Book a Room</a>
+					<a href="room-detail.html" class="btn">View Rooms</a>
+					<a href="profile.html" class="btn">Edit Profile</a>
+					<a href="logout.html" class="btn logout">Logout</a>
+				</div>
+		</section>
+		<section class="dashboard-actions">
+			<h2>Quick Actions</h2>
+			<div class="action-buttons">
+				<a href="booking.html" class="btn">Book a Room</a>
+				<a href="room-detail.html" class="btn">View Rooms</a>
+				<a href="profile.html" class="btn">Edit Profile</a>
+				<a href="logout.html" class="btn logout">Logout</a>
+			</div>
+		</section>
+	</main>
+	<footer class="dashboard-footer">
+		<p>&copy; 2025 Hotel Management System</p>
+	</footer>
+	<script src="../scripts/utils/api.js"></script>
+	<script src="../scripts/dashboard.js"></script>
+</body>
+</html>
