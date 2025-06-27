@@ -51,8 +51,8 @@ CREATE TABLE rooms (
     room_description TEXT,                                       
     beds_count INT NOT NULL CHECK (beds_count > 0),                                     
     capacity INT NOT NULL CHECK (capacity >= beds_count),                                       
-	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-	updated_at TIMESTAMP CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (room_type_id) REFERENCES room_types(room_types_id) ON DELETE RESTRICT 
 );
 
