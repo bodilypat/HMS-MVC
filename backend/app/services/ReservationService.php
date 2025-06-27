@@ -1,81 +1,94 @@
 <?php
 	
-	require_once __DIR__ .'/../models/Reservation.php';
+	namespaace App\Services;
 	
-	class ReservationService
+	use App\Models\Reservation;
+	use App\Models\Room;
+	use Exception;
+	
+	class Reservation
 	{
-		private Reservation $reservationModel;
+		protected $reservationModel;
+		protected $roomModel;
 		
-		public function __construct(PDO $pdo) 
+		public function __construct()
 		{
-			$this->reservationModel = new Reservation($pdo);
+			$this->reservationModel = new Reservation();
+			$this->roomModel = new Room();
 		}
 		
-		/* Get all reservations
-         * @return array
-        */
-		
-		public function getAll(): array 
+		/* Create a new reservation after validating room availability and quest data. */
+		public function createReservation(array $data)
 		{
-			return $this->reservationModel->getAll();
-		}
-		
-		/* Get a reservation by ID,
-         * @param int $id 
-         * @return array|null 
-		*/
-		
-		public function getById(int $id): ?array 
-		{
-			return $this->reservationModel->getById($id);
-		}
-		
-		/* Create a new reservation ,
-		 * @param array $data,
-		 * @return bool 
-		*/
-		
-		public function create(array $data): bool
-		{
-			/* Logic/validation hook */
-			if (empty($data['guest_id']) || empty($data['room_id']) || empty($data['check_id']) || empty($data['check_out'])) {
-				return false;
+			// Validate input 
+			if (empty($data['quest_id']) || empty($data['room_id']) || empty($data['check_in']) || empty($data['check_out'])) {
+				throw new Exception("Missing required reservation fields.");
 			}
 			
-			/* Optional: Add room available check here before creation */
-			return $this->servationModel->create($data);
+			/* Check room exists and is available */
+			$room = $this->roomModel->find($data['room_id']);
+			if (!$room) {
+				throw new Exception("Room not found.");
+			}
+			
+			if ($room['room_status'] !== 'Available') {
+				throw new Exception("Room is not available.");
+			}
+			
+			/* Create reservation */
+			$reservationCreate = $this->reservationModel->create([
+				'guest_id'  => $data['guest_id'],
+				'room_id'   => $data['room_id'],
+				'check-in'  => $data['check_in'],
+				'check_out' => $data['check_out'],
+				'number_of_guests'  => $data['number_of_guests'] ?? 1,
+				'reservation_status'  => $data['reservation_status'] ?? 'Pending',
+				'payment_status'  => $data['payment_status'] ?? 'Pending',
+				'booking_source'  => $data['booking_source'] ?? 'Website',
+				'special_request'  => $data['special_request'] ?? null,
+			]);
+			
+			if ($reservationCreate) {
+				/* Mark room as accupied */
+				$this->roomModel->updateStatus($data['room_id'], 'Occupied');
+			}
+			return $reservationCreated;
 		}
 		
-		/* Update an existing reservation,
-         * @param int $id,
-         * @param array $data 
-         * @return bool 
-		*/
-		
-		public function update(int $id, array $data): bool 
+		/* Cancel a reservation and free up to room. */
+		public function cancelReservation($reservationId) 
 		{
-			return $this->reservationModel->update($id, $data);
+			$reservation = $this->reservationModel->find($reservationId);
+			if (!$reservation) {
+				throw new Exception("Reservation not found.");
+			}
+			
+			if ($reservation['reservation_status'] === 'Cancelled') {
+				throw new Exception("Reservation is already cancelled.");
+			}
+			
+			$this->reservationModel->updateStatus($reservationId, 'Cancelled');
+			$this->roomModel->updateStatus($reservation['room_id'], 'Available');
+			
+			return true;
 		}
 		
-		/* Delete a reservation */
-		public function delete(int $id): bool 
+		/* Fetch reservation details */
+		public function getReservationById($id) 
 		{
-			return $this->reservationModel->delete($id);
+			return $this->reservationModel->find($id);
 		}
 		
-		/* Check if a room is available for a given date range */
-		
-		public function isRoomAvailable(int $roomId, string $startDate, string $endDate): bool 
+		/* Get reservation by guest */
+		public function getReservationByGuest($guestId) 
 		{
-			// You can move this to a dedicated AvailabilityChecker service if needed 
-			$overlapCount = $this->reservationModel->countOverlappingReservations($roomId, $startDate, $endDate);
-			return $overlapCount === 0;
+			return $this->reservationModel->findByGuest($guestId);
 		}
 		
-		/* Get reservations for a specific guest */
-		public function getByGuest(int $guestId): array 
+		/* Get all reservation  */
+		public function getAllReservation()
 		{
-			return $this->reservationModel->getByGuest($guestId);
+			return $this->reservationModel->getAll();
 		}
 	}
 	
