@@ -7,7 +7,7 @@ CREATE TABLE users (
     role ENUM('Admin','Manager','Receptionist','Staff','Guest') NOT NULL DEFAULT 'Guest',
     phone_number VARCHAR(20),
     status ENUM('Active','Inactive') DEFAULT 'Active',
-    ceate_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    create_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
@@ -33,11 +33,11 @@ CREATE TABLE room_types (
     type_name VARCHAR(50) UNIQUE NOT NULL, 
     description TEXT,
     base_price DECIMAL(10, 2) NOT NULL CHECK (base_price >= 0)
-	default_capacity INT NOT NULL DEFAULT 1 CHECK (default_capacity > 0),
-	bed_count INT NOT NULL DEFAULT 1 CHECK (bed_count > 0),
-	amenities TEXT,
-	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT TIMESTAMP
+    default_capacity INT NOT NULL DEFAULT 1 CHECK (default_capacity > 0),
+    bed_count INT NOT NULL DEFAULT 1 CHECK (bed_count > 0),
+    amenities TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT TIMESTAMP
 );
 
 /* Rooms table */
@@ -99,8 +99,9 @@ CREATE TABLE billings (
     discount DECIMAL(10, 2) DEFAULT 0.00 CHECK (discount >= 0),                                    
     total_amount DECIMAL(10, 2) NOT NULL CHECK (total_amount >= 0),                                   
     payment_status ENUM('Paid', 'Unpaid') NOT NULL,                          
-    CONSTRAINT fk_reservation FOREIGN KEY (reservation_id) REFERENCES reservations(reservation_id) ON DELETE CASCADE, 
-    CONSTRAINT chk_total_amount CHECK (total_amount >= 0)                    
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (reservation_id) REFERENCES reservations(reservation_id) ON DELETE CASCADE,                     
 );
 
 /* services table */
@@ -125,8 +126,7 @@ CREATE TABLE room_services (
     notes TEXT DEFAULT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    CONSTRAINT chk_service_request_time CHECK (service_request_time <= NOW()),
-	
+    CHECK (service_request_time <= NOW()),	
     FOREIGN KEY (reservation_id) REFERENCES reservations(reservation_id) ON DELETE CASCADE,
     FOREIGN KEY (service_id) REFERENCES services(service_id) ON DELETE SET NULL
 );
@@ -153,9 +153,9 @@ CREATE TABLE housekeepings (
     staff_id INT NOT NULL,                                                         
     cleaning_date DATETIME NOT NULL,                                               
     cleaning_status ENUM('Pending', 'In Process', 'Completed') NOT NULL,             
-    CONSTRAINT fk_room FOREIGN KEY (room_id) REFERENCES rooms(room_id) ON DELETE CASCADE, 
-    CONSTRAINT fk_staff FOREIGN KEY (staff_id) REFERENCES staff(staff_id) ON DELETE CASCADE, 
-    CONSTRAINT chk_cleaning_date CHECK (cleaning_date <= NOW())                      
+    CHECK (cleaning_date <= NOW()),
+    FOREIGN KEY (room_id) REFERENCES rooms(room_id) ON DELETE CASCADE, 
+    FOREIGN KEY (staff_id) REFERENCES staff(staff_id) ON DELETE CASCADE                      
 );
 
 /* Feedback Table */
@@ -166,6 +166,6 @@ CREATE TABLE feedbacks (
     rating INT NOT NULL CHECK (rating BETWEEN 1 AND 5),                          
     comments TEXT,                                                               
     feedback_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,                    
-    CONSTRAINT fk_guest FOREIGN KEY (guest_id) REFERENCES guests(guest_id) ON DELETE CASCADE,
-    CONSTRAINT fk_reservation FOREIGN KEY (reservation_id) REFERENCES reservations(reservation_id) ON DELETE CASCADE 
-
+    FOREIGN KEY (guest_id) REFERENCES guests(guest_id) ON DELETE CASCADE,
+    FOREIGN KEY (reservation_id) REFERENCES reservations(reservation_id) ON DELETE CASCADE 
+);
