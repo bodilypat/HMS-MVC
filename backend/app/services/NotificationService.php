@@ -1,4 +1,6 @@
 <?php
+
+	namespace App\Services;
 	
 	class NotificationService 
 	{
@@ -6,7 +8,11 @@
 		
 		public function __construct() {
 		{
-			$this->logFile = __DIR__ . '/../storages/logs/notifications.log';
+			$logDir = __DIR__ . '/../storages/logs';
+			if (!is_dir($logDir)) {
+				mkdir($logDir, 0755, true);
+			}
+			$this->logFile = $logDir .'/notifications.log';
 		}
 		
 		/* Send a notification  
@@ -16,8 +22,12 @@
 		 * @return bool 
 	   */
 	   
-	   public function send(string $reciption, string $message, string $type = 'internal'): bool 
+	   public function send(string $recippient, string $message, string $type = 'internal'): bool 
 	   {
+		   $recipient = strip_tags($recipient);
+		   $message = strip_tags($message);;
+		   $type = strtolower($type);
+		   
 		   $logEntry = sprintf(
 				"[%s] Type: %s | To: %s | Message: %s\n",
 				date('Y-md-d H:i:s'),
@@ -39,7 +49,7 @@
 	   public function sendEmail(string $email, string $subject, string $body): bool 
 	   {
 		   // Extend with real email sending
-		   $formatted = "Subject: $subject\nBody: $body";
+		   $formatted = "Subject: {$subject}\nBody: {$body}";
 		   return $this->send($email, $formatted, 'email');
 	   }
 	   
