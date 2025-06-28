@@ -1,4 +1,10 @@
 <?php
+
+	namespace App\Models;
+	
+	use PDO;
+	use PDOException;
+	
 	class Payment
 	{
 		private PDO $pdo;
@@ -26,8 +32,7 @@
 			try {
 				$stmt = $this->pdo->prepare("SELECT * FROM payments WHERE payment_id = ?");
 				$stmt->execute([$paymentId]);
-				$result = $stmt->fetch(PDO::FETCH_ASSOC);
-				return $result ?: null;
+				return $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
 			} catch (PDOException $e) {
 				error_log("Payment::getById - " . $e->getMessage());
 				return null;
@@ -38,7 +43,7 @@
 		public function getByReservation(int $reservationId): array
 		{
 			try {
-				$stmt = $this->prepare("SELECT * FROM paymemts WHERE reservation_id = ?");
+				$stmt = $this->pdo->prepare("SELECT * FROM paymemts WHERE reservation_id = ?");
 				$stmt->execute([$reservationId]);
 				return $stmt->fetchAll(PDO::FETCH_ASSOC);
 			} catch (PDOException $e) {
@@ -79,7 +84,7 @@
 		/* Update existing payment, Fully editable */
 		public function update(int $id, array $data): bool
 		{
-			if (empty($data['payment_id']) || !$this->isValidPaymentData($data)) {
+			if (!$this->isValidPaymentData($data)) {
 				return false;
 			}
 			try {
