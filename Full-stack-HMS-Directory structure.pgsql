@@ -1,5 +1,5 @@
 Full-stack-Hotel-Management-System(no framework) /
-├── backend/                                    # PHP backend (MVC structure)
+├── backend/                                    # PHP backend
 │   │  
 │   ├── public/                                 # Web-accessible entry point
 │   │   └── index.php                           # Front controller 
@@ -9,7 +9,7 @@ Full-stack-Hotel-Management-System(no framework) /
 │   │   ├── dbConnect.php                       # DB config
 │   │   └── .env                                # Environment variables 
 │   │     
-│   ├── core/                                   # Core libraries/utilities (request handing system) 
+│   ├── core/                                   # Core libraries/utilities 
 │   │   ├── Router.php                    
 │   │   ├── Request.php                   
 │   │   ├── Response.php                  
@@ -17,7 +17,7 @@ Full-stack-Hotel-Management-System(no framework) /
 │   │   ├── Database.php                 
 │   │   └── Logger.php         
 │   │     
-│   ├── app/                                    # MVC - style organization , Application Logic 
+│   ├── app/                                    # Application Logic 
 │   │   ├── controllers/                        # Controllers for each Domain
 │   │   │   ├── GuestController.php
 │   │   │   ├── RoomTypeController.php
@@ -32,31 +32,37 @@ Full-stack-Hotel-Management-System(no framework) /
 │   │   │   └── FeedbackController.php 
 │   │   │ 
 │   │   ├── models/                             # Data Models
-│   │   │   ├── Guest.php     
+│   │   │   ├── BaseModel.php     
+│   │   │   ├── Guest.php
+│   │   │   ├── Reservation.php 
+│   │   │   ├── Room.php
 │   │   │   ├── RoomType.php
-│   │   │   ├── Room.php 
-│   │   │   ├── Reservation.php
-│   │   │   ├── Payment.php
 │   │   │   ├── Billing.php
+│   │   │   ├── Payment.php
+│   │   │   ├── Staff.php
 │   │   │   ├── Service.php
 │   │   │   ├── RoomService.php
-│   │   │   ├── Staff.php
-│   │   │   ├── Housekeeping.php
+│   │   │   ├── HouseKeeping.php
 │   │   │   └── Feedback.php 
 │   │   │   
 │   │   ├── services/                           #Business logic
 │   │   │   ├── ReservationService.php
 │   │   │   ├── BillingService.php
-│   │   │   └── NotificationService.php   
+│   │   │   ├── PaymentService.php
+│   │   │   ├── RoomService.php
+│   │   │   ├── NotificationService.php
+│   │   │   └── AuthService.php   
 │   │   │ 
 │   │   ├── middleware/                         # Middleware for request filtering
 │   │   │   ├── AuthMiddleware.php
 │   │   │   └── SessionMiddleware.php 
 │   │   │ 
 │   │   ├── validators/                         # Validation logic
+│   │   │   ├── GuestValidator.php
 │   │   │   └── Validator.php  
 │   │   │    
 │   │   ├── helpers/                            # Helper utilities
+│   │   │   ├── DateHelper.php
 │   │   │   └── helper.php    
 │   │   │          
 │   │   └── auth/                               # Auth-specific scripts
@@ -65,8 +71,8 @@ Full-stack-Hotel-Management-System(no framework) /
 │   │       └── resetPassword.php                 
 │   │   
 │   ├── routes/                           # Route definitions
-│   │   ├── api.php                       # API base logic routing
-│   │   └── web.php                       # Optional server-rendered content
+│   │   ├── api.php                       # API routing
+│   │   └── web.php                       # Optional backend-rendered view 
 │   │
 │   ├── storages/                            
 │   │   ├── logs/ 
@@ -112,8 +118,8 @@ Full-stack-Hotel-Management-System(no framework) /
 │   │   ├── auth.js  
 │   │   ├── dashboard.js      
 │   │   └── utils/  
-│   │       ├── api.js                    # Abstracted API request fetch wrappers
-│   │       └── dom.js                    # DOM Maniputation helpers functions    
+│   │       ├── api.js                    # API fetch wrappers
+│   │       └── dom.js                    # DOM helper functions    
 │   │         
 │   ├── assets/                           # Static assets
 │   │   ├── images/
