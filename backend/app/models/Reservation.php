@@ -2,14 +2,13 @@
 
 	namespace App\Models;
 	
-	use App\Models\BaseModel;
 	use PDO;
 	use PDOException;
 	
 	class Reservation extends BaseModel
 	{
 		
-		protected $table;
+		protected string $table = 'reservation';
 		private PDO $pdo;
 			
 		public function __construct(PDO $pdo) 
@@ -17,7 +16,7 @@
 			$this->pdo = $pdo;
 		}
 		
-		/* Get all Reservation */
+		/* Get all Reservations */
 		public function getAll(): array 
 		{
 			try {
@@ -78,12 +77,14 @@
 			$sql = " INSERT INTO reservations (
 						   guest_id, room_id, check_in, check_out,
 						   number_of_guests, reservation_status, payment_status
-						   booking_source, special_request) 
+						   booking_source, special_request, created_at) 
 					  VALUES(:guest_id, :room_id, :check_in, :check_out, 
-					       :number_of_guests, :reservation_status, :payment_status, :booking_source, :special_request)
-					");
+					         :number_of_guests, :reservation_status, :payment_status, 
+							 :booking_source, :special_request, NOW()
+							 )
+					";
 			try {
-				$stmt = $this->db->prepare($sql);
+				$stmt = $this->pdo->prepare($sql);
 				return $stmt->execute([
 					'guest_id' => $data['guest_id'],
 					'room_id' => $data['room_id'],
@@ -95,6 +96,8 @@
 					'payment_status '=> $data['booking_source'] ?? 'Website',
 					'special_request' => $data['special_request'] ?? null,
 					]);
+					$lastId = $this->pdo->lastInsertId();
+					return $this->findById((int)$lastId);
 				} catch (PDOException $e) {
 					error_log("Reservation::create - " . $e->getMessage());
 					return false;
@@ -108,8 +111,7 @@
 				return false;
 			}
 			
-			try {
-				$stmt = $this->db->prepare("
+			$sql = "
 					UPDATE reservations SET 
 						guest_id = :guest_id,
 						room_id = :room_id,
@@ -122,11 +124,35 @@
 						special_request = :special_request,
 						updated_at = NOW()
 					WHERE reservation_id = :id 
-				");
-				$data['id'] = $id;
-				return $stmt->execute($data);
+				";
+			try {
+					$stmt = $this->pdo->prepare($sql);
+					return $stmt->execute([ 
+						'id' => $id,
+						'guest_id' => $data['guest_id'],
+						'check_in' => $data['room_id'],
+						'check_out' => $data['check_out'],
+						'number_of_guest' => $data['number_of_guests'] ?? 1,
+						'payment_status' => $data['payment_status'] ?? 'Pending',
+						'booking_source' => $data['booking_source'] ?? 'Website',
+						'special_request' => $data['special_request'] ?? null,
+					]);
+				} catch (PDOException $e) {
+					error_log("Reservation::update - " . $e->getMessage());
+					return false;
+			}
+		}
+		
+		/* Update status only */
+		public function updateStatus(int $id, string $status): bool 
+		{
+			try {
+				$stmt = $this->pdo->prepare("UPDATE reservations 
+				                             SET reservation_status = :status, updated_at = NOW() 
+											 WHERE reservation_id = :id");
+				return $stmt->execute(['status' => $status, 'id' => $id]);
 			} catch (PDOException $e) {
-				error_log("Reservation::update - " . $e->getMessage());
+				error_log("Reservation::updateStatus - " . $e->getMessage());
 				return false;
 			}
 		}
@@ -152,7 +178,7 @@
 		/* Validate data for create/update */
 		private function isValidReservationData(array $data, bool $isUpdate = false ): bool 
 		{
-			$validStatus = ['Pending','Confirmed','Checked-in','Check-out','Cancelled']);
+			$validStatus = ['Pending','Confirmed','Checked-in','Check-out','Cancelled'];
 			$validPayment = ['Pending','Paid','Partially Paid','Refunded'];
 			$validSource = ['Website','Phone','Walk-in','Travel Agency','OTA'];
 			
