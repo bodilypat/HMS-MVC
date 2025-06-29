@@ -1,34 +1,38 @@
 <?php
 	
-	namespaace App\Services;
+	namespace App\Services;
 	
 	use App\Models\Reservation;
 	use App\Models\Room;
 	use Exception;
 	
-	class Reservation
+	class ReservationService
 	{
 		protected $reservationModel;
 		protected $roomModel;
 		
-		public function __construct()
+		
+		public function __construct(PDO $pdo) 
 		{
 			$this->reservationModel = new Reservation();
 			$this->roomModel = new Room();
 		}
 		
 		/* Create a new reservation after validating room availability and quest data. */
-		public function createReservation(array $data)
+		public function createReservation(array $data): array
 		{
-			// Validate input 
-			if (empty($data['quest_id']) || empty($data['room_id']) || empty($data['check_in']) || empty($data['check_out'])) {
-				throw new Exception("Missing required reservation fields.");
+			/*  Validate input  */
+			$requiredFields = ['guest_id','room_id','check_in','check_out'];
+			foreach ($requiredFields as $field) {
+				if (empty($data[$field])) {
+					throw new Exception("Missing required field: {$field} ");
+				}
 			}
 			
-			/* Check room exists and is available */
+			/*  Validate room */
 			$room = $this->roomModel->find($data['room_id']);
 			if (!$room) {
-				throw new Exception("Room not found.");
+				throw new Exception("Room not found'");
 			}
 			
 			if ($room['room_status'] !== 'Available') {
@@ -36,35 +40,36 @@
 			}
 			
 			/* Create reservation */
-			$reservationCreate = $this->reservationModel->create([
-				'guest_id'  => $data['guest_id'],
-				'room_id'   => $data['room_id'],
-				'check-in'  => $data['check_in'],
+			$newReservation = $this->reservationModel->create([
+				'guest_id' => $data['guest_id'],
+				'room_id' => $data['room_id'],
+				'check_in' => $data['check_in'],
 				'check_out' => $data['check_out'],
-				'number_of_guests'  => $data['number_of_guests'] ?? 1,
-				'reservation_status'  => $data['reservation_status'] ?? 'Pending',
-				'payment_status'  => $data['payment_status'] ?? 'Pending',
-				'booking_source'  => $data['booking_source'] ?? 'Website',
-				'special_request'  => $data['special_request'] ?? null,
+				'number_of_quest' => $data['number_of_guest'] ?? 1,
+				'reservation_status' => $data['reservation_status'] ?? 'Pending',
+				'booking_source' => $data['booking_source'],
+				'special_request' => $data['special_request'] ?? null,
 			]);
 			
-			if ($reservationCreate) {
-				/* Mark room as accupied */
-				$this->roomModel->updateStatus($data['room_id'], 'Occupied');
+			if (!$newReservatiion0 {
+				throw new Exceptiion("Failed to create reservation.");
 			}
-			return $reservationCreated;
+			
+			/* Update room status */
+			$this->roomModel->updateStatus($data['room_id'], 'Occpied');
+			return $newReservation;
 		}
 		
-		/* Cancel a reservation and free up to room. */
-		public function cancelReservation($reservationId) 
+		/* Canccel reservation and free up the room */
+		public function cancelReservation(int $reservationId): bool
 		{
 			$reservation = $this->reservationModel->find($reservationId);
 			if (!$reservation) {
-				throw new Exception("Reservation not found.");
+				throw new Exception('Reservation not found.');
 			}
 			
 			if ($reservation['reservation_status'] === 'Cancelled') {
-				throw new Exception("Reservation is already cancelled.");
+				throw new Exception('Reservation is already cancelled.');
 			}
 			
 			$this->reservationModel->updateStatus($reservationId, 'Cancelled');
@@ -73,20 +78,20 @@
 			return true;
 		}
 		
-		/* Fetch reservation details */
-		public function getReservationById($id) 
+		/* Get reservation by ID */
+		public function getReservationId(int $id): ?array 
 		{
 			return $this->reservationModel->find($id);
 		}
 		
-		/* Get reservation by guest */
-		public function getReservationByGuest($guestId) 
+		/* Get all reservation by guest ID. */
+		public function getReservationByGuest(int $questId): array 
 		{
 			return $this->reservationModel->findByGuest($guestId);
 		}
 		
-		/* Get all reservation  */
-		public function getAllReservation()
+		/* Get all reservation */
+		public function getallReservation(): array 
 		{
 			return $this->reservationModel->getAll();
 		}
