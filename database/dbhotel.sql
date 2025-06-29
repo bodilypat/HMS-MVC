@@ -63,15 +63,15 @@ CREATE TABLE reservations (
     room_id INT NOT NULL,                                           
     check_in DATE NOT NULL,                                          
     check_out DATE NOT NULL,
-    number_of_guests INT NOT NULL DEFAULT 1 CHECK (number_of_checks > 0),
+    number_of_guests INT NOT NULL DEFAULT 1 CHECK (number_of_guests > 0),
     reservation_status ENUM('Pending','Confirmed','Checked-in','Checked-out','Cancelled') NOT NULL DEFAULT 'Pending',  
     payment_status ENUM('Pending','Paid','Partially Paid','Refunded') NOT NULL DEFAULT 'Pending',
-    booking_source ENUM('Website','Phone','Walk-in','Traval Agency','OTA') NOT NULL 'Website',
+    booking_source ENUM('Website','Phone','Walk-in','Travel Agency','OTA') NOT NULL 'booking_source',
     special_request TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     CONSTRAINT chk_date CHECK (check_in <= check_out),   
-    FOREIGN KEY (quest_id) REFERENCES guests(guest_id) ON DELETE CASCADE,  
+    FOREIGN KEY (guest_id) REFERENCES guests(guest_id) ON DELETE CASCADE,  
     FOREIGN KEY (room_id) REFERENCES rooms(room_id) ON DELETE SET NULL               
 );
 
