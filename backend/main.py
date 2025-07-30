@@ -34,6 +34,3 @@ async def startup():
     async def shutdown():
         print("Shutting down...")
         
-               
-
-app.include_router(api_router)
