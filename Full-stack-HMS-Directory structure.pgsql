@@ -1,15 +1,15 @@
 Full-stack-Hotel-Management-System(no framework) /
-├── backend/                                    # PHP backend
+├── backend/                                    
 │   │  
-│   ├── public/                                 # Web-accessible entry point
-│   │   └── index.php                           # Front controller 
+│   ├── public/                                       # Publicly accessible (document root)
+│   │   └── index.php                                 # Entry point / Front controller
 │   │ 
-│   ├── config/                                 # App configuration
-│   │   ├── config.php                          # Global config
-│   │   ├── dbConnect.php                       # DB config
-│   │   └── .env                                # Environment variables 
+│   ├── config/                                       # Configuration files
+│   │   ├── config.php                                # General config
+│   │   ├── dbConnect.php                             # DB connection
+│   │   └── .env                                      # Environment variables 
 │   │     
-│   ├── core/                                   # Core libraries/utilities 
+│   ├── core/                                         # Core libraries and infrastructure  
 │   │   ├── Router.php                    
 │   │   ├── Request.php                   
 │   │   ├── Response.php                  
@@ -17,62 +17,91 @@ Full-stack-Hotel-Management-System(no framework) /
 │   │   ├── Database.php                 
 │   │   └── Logger.php         
 │   │     
-│   ├── app/                                    # Application Logic 
-│   │   ├── controllers/                        # Controllers for each Domain
-│   │   │   ├── GuestController.php
-│   │   │   ├── RoomTypeController.php
-│   │   │   ├── RoomController.php
-│   │   │   ├── ReservationController.php
-│   │   │   ├── PaymentController.php
-│   │   │   ├── BillingController.php
-│   │   │   ├── ServiceController.php
-│   │   │   ├── RoomServiceController.php
-│   │   │   ├── StaffController.php
-│   │   │   ├── HousekeepingController.php
-│   │   │   └── FeedbackController.php 
+│   ├── app/                                   
+│   │   ├── controllers/                              # HTTP Controllers
+│   │   │   ├── BaseController.php
+│   │   │   ├── guest/
+│   │   │   │   └── GuestController.php  
+│   │   │   ├── room/
+│   │   │   │   ├── RoomController.php
+│   │   │   │   └── RoomTypeController.php
+│   │   │   ├── reservation/
+│   │   │   │ 	└── reservationController.php
+│   │   │   ├── payment/
+│   │   │   │   ├── PaymentController.py
+│   │   │   │   └── BillingController.php
+│   │   │   ├── service/
+│   │   │   │   ├── ServiceController.php
+│   │   │   │   ├── RoomServiceController.php
+│   │   │   │   └── HousekeepingController.php
+│   │   │   ├── staff/
+│   │   │   │   └── StaffController.php  
+│   │   │   └── feedback/
+│   │   │       └── FeedbackController.php 
 │   │   │ 
-│   │   ├── models/                             # Data Models
-│   │   │   ├── BaseModel.php     
-│   │   │   ├── Guest.php
-│   │   │   ├── Reservation.php 
-│   │   │   ├── Room.php
-│   │   │   ├── RoomType.php
-│   │   │   ├── Billing.php
-│   │   │   ├── Payment.php
-│   │   │   ├── Staff.php
-│   │   │   ├── Service.php
-│   │   │   ├── RoomService.php
-│   │   │   ├── HouseKeeping.php
-│   │   │   └── Feedback.php 
-│   │   │   
-│   │   ├── services/                           #Business logic
-│   │   │   ├── ReservationService.php
-│   │   │   ├── BillingService.php
-│   │   │   ├── PaymentService.php
-│   │   │   ├── RoomService.php
-│   │   │   ├── NotificationService.php
-│   │   │   └── AuthService.php   
+│   │   ├── services/                                 # Business Logic
+│   │   │   ├── BaseService.php
+│   │   │   ├── guest/
+│   │   │   │   └── GuestService.php  
+│   │   │   ├── room/
+│   │   │   │   ├── RoomService.php
+│   │   │   │   └── RoomTypeService.php
+│   │   │   ├── reservation/
+│   │   │   │ 	└── ReservationService.php
+│   │   │   ├── payment/
+│   │   │   │   ├── PaymentService.py
+│   │   │   │   └── BillingService.php
+│   │   │   ├── service/
+│   │   │   │   ├── ServiceService.php
+│   │   │   │   ├── RoomServiceService.php
+│   │   │   │   └── HousekeepingService.php
+│   │   │   ├── staff/
+│   │   │   │   └── StaffService.php  
+│   │   │   ├── feedback/
+│   │   │   │   └── FeedbackService.php  
+│   │   │   ├── auth/
+│   │   │   │   └── AuthService.php  
+│   │   │   └── notification/
+│   │   │       └── NotificationService.php 
+│   │   ├── models/                                    # Data Models (ORM-style)
+│   │   │   ├── BaseModel.php
+│   │   │   ├── guest/
+│   │   │   │   └── Guest.php  
+│   │   │   ├── room/
+│   │   │   │   ├── Room.php
+│   │   │   │   └── RoomType.php
+│   │   │   ├── reservation/
+│   │   │   │ 	└── Reservation.php
+│   │   │   ├── payment/
+│   │   │   │   ├── Payment.php
+│   │   │   │   └── Billing.php
+│   │   │   ├── service/
+│   │   │   │   ├── Service.php
+│   │   │   │   ├── RoomService.php
+│   │   │   │   └── Housekeeping.php
+│   │   │   └── feedback/
+│   │   │       └── Feedback.php 
 │   │   │ 
-│   │   ├── middleware/                         # Middleware for request filtering
+│   │   ├── middleware/                        # HTTP Middleware
 │   │   │   ├── AuthMiddleware.php
 │   │   │   └── SessionMiddleware.php 
 │   │   │ 
-│   │   ├── validators/                         # Validation logic
-│   │   │   ├── GuestValidator.php
-│   │   │   └── Validator.php  
+│   │   ├── validators/                        # Input validation logic
+│   │   │   ├── Validator.php
+│   │   │   └── GuestValidator.php  
 │   │   │    
-│   │   ├── helpers/                            # Helper utilities
-│   │   │   ├── DateHelper.php
-│   │   │   └── helper.php    
+│   │   ├── helpers/                           # Global utility functions
+│   │   │   ├── helper.php
+│   │   │   └── DateHelper.php    
 │   │   │          
-│   │   └── auth/                               # Auth-specific scripts
+│   │   └── auth/                              # Auth-related scripts (procedural/CLI)
 │   │       ├── Login.php   
 │   │       ├── register.php                   
 │   │       └── resetPassword.php                 
 │   │   
-│   ├── routes/                           # Route definitions
-│   │   ├── api.php                       # API routing
-│   │   └── web.php                       # Optional backend-rendered view 
+│   ├── routes/                                # Route definitions
+│   │   ├── api.php                            # API routing
+│   │   └── web.php                                 
 │   │
 │   ├── storages/                            
 │   │   ├── logs/ 
@@ -81,47 +110,58 @@ Full-stack-Hotel-Management-System(no framework) /
 │   │       └── receipts/                    
 │   │
 │   ├── tests/  
-│   │   ├── RoomTest.php                  # Unit or integration tests
+│   │   ├── RoomTest.php                       # Unit or integration tests
 │   │   └── GuestTest.php                 
 │   │
-│   └── index.php                         # Alternative entry point (CLI/API testing)
+│   └── index.php                              # Alternative entry point (CLI/API testing)
 │
-├── frontend/                             # Client-side static UI
-│   ├── public/                           # Public HTML entry (for hosting)
+├── frontend/                                  # Client-side static UI
+│   ├── public/                                # Public HTML entry (for hosting)
 │   │   └── index.html  
 │   │
-│   ├── pages/                            # Page Templates
-│   │   ├── index.html  
-│   │   ├── booking.html
-│   │   ├── room-detail.html 
-│   │   ├── feedback.html 
-│   │   ├── login.html 
-│   │   └── dashboard.html 
+│   ├── pages/                                 # Page Templates
+│   │   ├── Guest/
+│   │   ├── Room/
+│   │   ├── Reservation/ 
+│   │   ├── dashboard/ 
+│   │   └── index.html                         # Homepage 
 │   │
-│   ├── components/                       # HTML fragments
-│   │   ├── header.html
-│   │   ├── footer.html
-│   │   └── room-card.html 
+│   ├── components/                            # HTML UI components(reusable)
+│   │   ├── layout/
+│   │   ├── room/
+│   │   ├── reservation/
+│   │   └── feedback/
 │   │                        
-│   ├── styles/                           # CSS
-│   │   ├── main.css
-│   │   ├── booking.css 
-│   │   ├── dashboard.css   
-│   │   ├── responsive.css  
-│   │   └── thems/ 
-│   │       └── default.css   
-│   │          
-│   ├── scripts/                          # JavaScript
-│   │   ├── main.js 
-│   │   ├── booking.js 
-│   │   ├── feedback.js 
-│   │   ├── auth.js  
-│   │   ├── dashboard.js      
-│   │   └── utils/  
-│   │       ├── api.js                    # API fetch wrappers
-│   │       └── dom.js                    # DOM helper functions    
+│   ├── styles/                                # CSS
+│   │   ├── main.css                           # Global styles
+│   │   ├── responsive.css                     # Media queries
+│   │   ├── themes/ 
+│   │   │   └── default.css
+│   │   ├── guest/ 
+│   │   │   └── auth.css
+│   │   ├── room/ 
+│   │   │   └── room.css
+│   │   ├── reservation/ 
+│   │   │    └── booking.css
+│   │   └── dashboard/ 
+│   │       └── dashboard.css   
+│   │       
+│   ├── scripts/                           		# JavaScript
+│   │   ├── main.js                             # Entry point, global events
+│   │   ├── utills/                             # Shared functions
+│   │   │   ├── api.js                          # API request handler
+│   │   │   └── dom.js                          # DOM utils
+│   │   ├── guest/ 
+│   │   │   ├── auth.js                         # Login / register
+│   │   │   └── feedback.js
+│   │   ├── room/ 
+│   │   │   └── room.js
+│   │   ├── reservation/ 
+│   │   │    └── booking.js
+│   │   └── dashboard/ 
+│   │       └── dashboard.js    
 │   │         
-│   ├── assets/                           # Static assets
+│   ├── assets/                          		 # Static assets
 │   │   ├── images/
 │   │   │   ├── logo.png
 │   │   │   ├── rooms/
