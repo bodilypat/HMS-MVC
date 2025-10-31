@@ -1,51 +1,100 @@
-// Frontend/js/views/roomPage.js 
+// frontend/js/views/roomPage.js 
 
-export const renderRoomTable = (rooms) => {
-    const tableBody = document.getElementById("room-table-body");
+import * as roomController from '../controllers/roomController.js';
+
+/* DOM Elements */
+const tableBody = document.querySelector('#room-table-body');
+const roomPage = document.querySelector('#roomForm');
+
+/* Initialze page */
+document.addEventListener('DOMContentLoaded', () => {
+    roomController.loadRooms();
+});
+
+/* Render room table */
+export function renderRoomTable(rooms = []) {
     if (!tableBody) return;
-    tableBody.innerHTML = "";
 
-    rooms.forEach((room) => {
-        const row = document.createElement("tr");
+    tableBody.innerHTML = '';
+
+    if (rooms.length === 0) {
+        tableBody.innerHTML= `
+            <tr><td colspan="9" class="no-data">No rooms available.</td></tr>
+        `;
+        return;
+    }
+
+    rooms.forEach(room => {
+        const row = document.createElement('tr');
+        row.dataset.id = room.room_id;
         row.innerHTML = `
-                <td>${room.room_number}</td>
-                <td>${room.room_type_name}</td>
-                <td>${room.floor_number}</td>
-                <td>${room.beds_count}</td>
-                <td>${room.capacity}</td>
-                <td>${room.price_per_night.toFixed(2)}</td>
-                <td>${room.room_status}</td>
-                <td>${room.room_description || ""}</td>
-                <td>
-                    <button onclick="editRoomUI(${room.room_id})">Edit</button>
-                    <button onclick="deleteRoomUI(${room.room_id})">Delete</button>
-                </td>
-            `;
-        tableBody.appendChild(row)    ;
+            <td>${room.room_number}</td>
+            <td>${room.room_type_name}</td>
+            <td>${room.floor_number}</td>
+            <td>${room.beds_count}</td>
+            <td>${room.capacity}</td>
+            <td>${Number(room.price_per_night).toFixed(2)}</td>
+            <td>${room.room_status}</td>
+            <td>${room.room_description || '-'}</td>
+            <td>
+                <button class="btn-edit" data-id="${room.room_id}">Edit</button>
+                <button class="btn-delete" data-id="${room.room_id}>Delete</button>
+            </td>
+        `;
+        tableBody.appendChild(row);
     });
-};
 
-export const populateRoomForm = (room) => {
-    document.getElementById("room-id").value = room.room_id;
-    document.getElementById("room-number").value = room.room_number;
-    document.getElementById("room-type-id").value = room.room_type_id;
-    document.getElementById("floor-number").value = room.floor_number;
-    document.getElementById("beds-count").value = room.beds_count;
-    document.getElementById("capacity").value = room.capacity;
-    document.getElementById("price-per-night").value = room.price_per_night;
-    document.getElementById("room-status").value = room.room_status;
-    document.getElementById("room-description").value = room.room_description;
-};
+    /* Attach event listname */
+    tableBody.querySelectorAll('.btn-edit').forEach(btn => 
+        btn.addEventListener('click', e=> {
+            const id = e.target.dataset.id;
+            roomController.editRoom(id);
+        })
+    );
 
-export const clearRoomForm = () => {
-    document.getElementById("room-id").value = "";
-    document.getElementById("room-number").value = "";
-    document.getElementById("room-type-id").value = "";
-    document.getElementById("floor-number").value = 0;
-    document.getElementById("beds-count").value = 1;
-    document.getElementById("capacity").value = 1;
-    document.getElementById("price-per-night").value = 0.0;
-    document.getElementById("room-status").value = "Available";
-    document.getElementById("room-description").value = "";
+    tableBody.querySelectorAll('.btn-delete').forEach(btn => 
+        btn.addEventListener('click', e => {
+            const id = e.target.dataset.id;
+            if (confirm('Delete this room?')) roomController.removeRoom(id);
+        })
+    );
+}
+
+/* Populate the room from (for editing) */
+export function populateRoomForm(room) {
+    if (!roomForm) return;
+    
+    roomForm.room_id.value = room.room_id;
+    roomForm.room_number.value = room.room_number;
+    roomForm.room_type_id.value = room.room_type_id;
+    roomForm.floor_number.value = room.floor_number;
+    roomForm.beds_count.value = room.beds_count;
+    roomForm.capacity.value = room.capacity;
+    roomForm.price_per_night.value = room.price_per_night;
+    roomForm.room_status.value = room.room_status,
+    roomForm.room_description.value = room.room_description || '';
+}
+
+/* Clear the room form */
+export function clearRoomForm() {
+    if (!roomForm) return;
+        roomForm.reset();
+
+        roomForm.room_id.value = '';
+        roomForm.room_status.value = 'Available';
+        roomForm.floor_number.value = 1;
+        roomForm.beds_count.value = 1;
+        roomForm.capacity.value = 1;
+        roomForm.price_per_night.value = 0;
+}
+
+/* Show error feedback */
+export function showError(message) {
+    alert(message);
+}
+
+/* Show success feedback */
+export function showSuccess(message) {
+    alert(message);
 }
 
