@@ -1,4 +1,4 @@
-/ Frontend/js/models/Room.js 
+// Frontend/js/models/Room.js 
 
 export default class Room {
     constructor({
