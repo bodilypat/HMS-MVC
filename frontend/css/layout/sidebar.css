@@ -1,7 +1,7 @@
-/* css/layout/header.css */ 
+/* css/layout/sidebar.css */ 
 
-.header {
-    width: 100%;
+.sidebar {
+    width: 250px;
     background-color: #f8f9fa;
     padding: 20px;
     box-sizing: border-box;
